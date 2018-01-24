@@ -7,7 +7,8 @@ import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 public class MySQLConnection {
-	public static Connection getConexion() {
+	
+	public static Connection getConnection() {
 		
 		//Se instancia la comunicacion con la BD
 		Connection com = null;
@@ -15,9 +16,9 @@ public class MySQLConnection {
 		//Se tienen que cargar los drivers de mySQL.
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			String url = "jdbcmysql://localhost/bd_Student Status";
+			String url = "jdbc:mysql://localhost/status";
 			String user = "root";
-			String password = "";
+			String password = "mysql";
 			
 			com = DriverManager.getConnection(url, user, password);
 		} catch (ClassNotFoundException e) {

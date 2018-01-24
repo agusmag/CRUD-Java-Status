@@ -155,4 +155,12 @@ public class StatusMenu {
 		frmStatus.getContentPane().setLayout(groupLayout);
 	}
 
+	public JFrame getFrmStatus() {
+		return frmStatus;
+	}
+
+	public void setFrmStatus(JFrame frmStatus) {
+		this.frmStatus = frmStatus;
+	}
+	
 }

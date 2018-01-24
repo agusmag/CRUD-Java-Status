@@ -3,13 +3,15 @@ package entity;
 public class Student {
 	private String username;
 	private String password;
-	private int value;
+	private int idCarrer;
 	
-	
-	public Student (String user, String pass, int index){
+	public Student (String user, String pass, int id){
 		this.username = user;
 		this.password = pass;
-		this.value = index;
+		this.idCarrer = id;
+	}
+
+	public Student() {
 	}
 
 	public String getUsername() {
@@ -31,14 +33,12 @@ public class Student {
 		this.password = password;
 	}
 
-
-	public int getValue() {
-		return value;
+	public int getIdCarrer() {
+		return idCarrer;
 	}
 
-
-	public void setValue(int value) {
-		this.value = value;
+	public void setIdCarrer(int idCarrer) {
+		this.idCarrer = idCarrer;
 	}
 	
 }
