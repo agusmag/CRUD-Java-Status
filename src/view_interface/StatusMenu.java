@@ -47,6 +47,7 @@ public class StatusMenu {
 		frmStatus.setTitle("Status");
 		frmStatus.setBounds(100, 100, 794, 305);
 		frmStatus.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmStatus.setLocationRelativeTo(null);
 		
 		JButton btnCarrer = new JButton("Carrer");
 		btnCarrer.setFont(new Font("Consolas", Font.PLAIN, 18));

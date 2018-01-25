@@ -1,0 +1,9 @@
+//Comandos para Hibernate.
+
+//Iniciar la sesion con Hibernate
+//1) Creamos un objeto Session
+private static Session session;
+
+//2) Iniciamos la sesion
+session = HibernateConfig.getSessionFactory().openSession();
+
