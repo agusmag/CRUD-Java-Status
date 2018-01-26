@@ -14,11 +14,15 @@ import java.awt.Color;
 import javax.swing.SwingConstants;
 
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 import hibernate.HibernateConfig;
+import model.Carrer;
+import model.Enrollment;
 import model.Student;
 
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.awt.event.ActionEvent;
 
 public class StatusMenu {
@@ -41,6 +45,10 @@ public class StatusMenu {
 	private String pass;
 	
 	private Session session;
+	private JLabel lblLastname;
+	private JLabel lblName;
+	private JLabel lbl_infoLastName;
+	private JLabel lbl_infoName;
 
 	/**
 	 * Launch the application.
@@ -72,11 +80,12 @@ public class StatusMenu {
 		frmStatus = new JFrame();
 		frmStatus.setBackground(Color.ORANGE);
 		frmStatus.setTitle("Status");
-		frmStatus.setBounds(100, 100, 816, 290);
+		frmStatus.setBounds(100, 100, 523, 437);
 		frmStatus.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmStatus.setLocationRelativeTo(null);
 		
 		btnCarrer = new JButton("Carrer");
+		btnCarrer.setBounds(12, 73, 157, 33);
 		btnCarrer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
@@ -84,6 +93,7 @@ public class StatusMenu {
 		btnCarrer.setFont(new Font("Consolas", Font.PLAIN, 18));
 		
 		btnShowStatus = new JButton("Show Status");
+		btnShowStatus.setBounds(12, 186, 157, 91);
 		btnShowStatus.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				show();
@@ -95,9 +105,11 @@ public class StatusMenu {
 		btnShowStatus.setFont(new Font("LLPixel", Font.PLAIN, 18));
 		
 		btnSubjets = new JButton("Subjects");
+		btnSubjets.setBounds(12, 131, 157, 33);
 		btnSubjets.setFont(new Font("Consolas", Font.PLAIN, 18));
 		
 		lblCarrer = new JLabel("Carrer");
+		lblCarrer.setBounds(211, 139, 128, 26);
 		lblCarrer.setOpaque(true);
 		lblCarrer.setForeground(Color.BLACK);
 		lblCarrer.setVisible(false);
@@ -107,6 +119,7 @@ public class StatusMenu {
 		lblCarrer.setBackground(Color.ORANGE);
 		
 		lblAvg = new JLabel("Average");
+		lblAvg.setBounds(211, 186, 128, 26);
 		lblAvg.setOpaque(true);
 		lblAvg.setVisible(false);
 		lblAvg.setFont(new Font("Consolas", Font.BOLD, 14));
@@ -114,6 +127,7 @@ public class StatusMenu {
 		lblAvg.setBackground(Color.ORANGE);
 		
 		lblSubjectsIn = new JLabel("Subjects IN");
+		lblSubjectsIn.setBounds(211, 233, 128, 26);
 		lblSubjectsIn.setOpaque(true);
 		lblSubjectsIn.setVisible(false);
 		lblSubjectsIn.setFont(new Font("Consolas", Font.BOLD, 14));
@@ -121,6 +135,7 @@ public class StatusMenu {
 		lblSubjectsIn.setBackground(Color.ORANGE);
 		
 		lblYearsIn = new JLabel("Years IN");
+		lblYearsIn.setBounds(211, 280, 128, 26);
 		lblYearsIn.setOpaque(true);
 		lblYearsIn.setVisible(false);
 		lblYearsIn.setFont(new Font("Consolas", Font.BOLD, 14));
@@ -129,20 +144,30 @@ public class StatusMenu {
 		
 		lbl_infoAvg = new JLabel("");
 		lbl_infoAvg.setVisible(false);
-		lbl_infoAvg.setEnabled(false);
+		lbl_infoAvg.setHorizontalAlignment(SwingConstants.CENTER);
+		lbl_infoAvg.setBounds(346, 186, 128, 26);
+		lbl_infoAvg.setFont(new Font("Consolas", Font.PLAIN, 14));
+		lbl_infoAvg.setHorizontalTextPosition(SwingConstants.CENTER);
 		lbl_infoAvg.setBackground(new Color(102, 205, 170));
 		
 		lbl_infoSI = new JLabel("");
 		lbl_infoSI.setVisible(false);
-		lbl_infoSI.setEnabled(false);
+		lbl_infoSI.setHorizontalAlignment(SwingConstants.CENTER);
+		lbl_infoSI.setBounds(346, 233, 128, 27);
+		lbl_infoSI.setFont(new Font("Consolas", Font.PLAIN, 14));
+		lbl_infoSI.setHorizontalTextPosition(SwingConstants.CENTER);
 		lbl_infoSI.setBackground(new Color(102, 205, 170));
 		
 		lbl_infoYI = new JLabel("");
 		lbl_infoYI.setVisible(false);
-		lbl_infoYI.setEnabled(false);
+		lbl_infoYI.setHorizontalAlignment(SwingConstants.CENTER);
+		lbl_infoYI.setBounds(346, 280, 128, 26);
+		lbl_infoYI.setFont(new Font("Consolas", Font.PLAIN, 14));
+		lbl_infoYI.setHorizontalTextPosition(SwingConstants.CENTER);
 		lbl_infoYI.setBackground(new Color(102, 205, 170));
 		
 		btnBack = new JButton("Back");
+		btnBack.setBounds(270, 342, 154, 31);
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frmStatus.dispose();
@@ -154,71 +179,59 @@ public class StatusMenu {
 		
 		lbl_infoCar = new JLabel("");
 		lbl_infoCar.setVisible(false);
-		GroupLayout groupLayout = new GroupLayout(frmStatus.getContentPane());
-		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
-						.addComponent(btnSubjets, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(btnCarrer, GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
-						.addComponent(btnShowStatus, GroupLayout.PREFERRED_SIZE, 157, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.RELATED, 84, Short.MAX_VALUE)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
-								.addComponent(lbl_infoCar, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-								.addComponent(lblCarrer, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE))
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-								.addComponent(lblAvg, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lbl_infoAvg, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE))
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-								.addComponent(lbl_infoSI, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblSubjectsIn, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE))
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(lbl_infoYI, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblYearsIn, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE))
-							.addContainerGap())
-						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-							.addComponent(btnBack, GroupLayout.PREFERRED_SIZE, 154, GroupLayout.PREFERRED_SIZE)
-							.addGap(21))))
-		);
-		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(23)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(btnCarrer, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
-							.addGap(25)
-							.addComponent(btnSubjets, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
-							.addGap(18)
-							.addComponent(btnShowStatus, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
-								.addGroup(groupLayout.createSequentialGroup()
-									.addComponent(lblYearsIn, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
-									.addGap(33))
-								.addGroup(groupLayout.createSequentialGroup()
-									.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-										.addComponent(lblSubjectsIn, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
-										.addComponent(lblAvg, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
-										.addComponent(lblCarrer, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE))
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-										.addComponent(lbl_infoCar, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-										.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
-											.addComponent(lbl_infoSI, GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
-											.addComponent(lbl_infoAvg, GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
-											.addComponent(lbl_infoYI, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)))))
-							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-							.addComponent(btnBack)))
-					.addGap(35))
-		);
-		frmStatus.getContentPane().setLayout(groupLayout);
+		lbl_infoCar.setHorizontalAlignment(SwingConstants.CENTER);
+		lbl_infoCar.setBounds(346, 139, 128, 26);
+		lbl_infoCar.setFont(new Font("Consolas", Font.PLAIN, 14));
+		lbl_infoCar.setHorizontalTextPosition(SwingConstants.CENTER);
+		frmStatus.getContentPane().setLayout(null);
+		frmStatus.getContentPane().add(btnSubjets);
+		frmStatus.getContentPane().add(btnCarrer);
+		frmStatus.getContentPane().add(btnShowStatus);
+		frmStatus.getContentPane().add(lbl_infoCar);
+		frmStatus.getContentPane().add(lblCarrer);
+		frmStatus.getContentPane().add(lblAvg);
+		frmStatus.getContentPane().add(lbl_infoAvg);
+		frmStatus.getContentPane().add(lbl_infoSI);
+		frmStatus.getContentPane().add(lblSubjectsIn);
+		frmStatus.getContentPane().add(lbl_infoYI);
+		frmStatus.getContentPane().add(lblYearsIn);
+		frmStatus.getContentPane().add(btnBack);
+		
+		lblLastname = new JLabel("Lastname");
+		lblLastname.setVisible(false);
+		lblLastname.setHorizontalAlignment(SwingConstants.CENTER);
+		lblLastname.setOpaque(true);
+		lblLastname.setBackground(Color.ORANGE);
+		lblLastname.setHorizontalTextPosition(SwingConstants.CENTER);
+		lblLastname.setFont(new Font("Consolas", Font.BOLD, 14));
+		lblLastname.setBounds(211, 92, 128, 26);
+		frmStatus.getContentPane().add(lblLastname);
+		
+		lblName = new JLabel("Name");
+		lblName.setVisible(false);
+		lblName.setHorizontalAlignment(SwingConstants.CENTER);
+		lblName.setOpaque(true);
+		lblName.setBackground(Color.ORANGE);
+		lblName.setHorizontalTextPosition(SwingConstants.CENTER);
+		lblName.setFont(new Font("Consolas", Font.BOLD, 14));
+		lblName.setBounds(211, 45, 128, 26);
+		frmStatus.getContentPane().add(lblName);
+		
+		lbl_infoLastName = new JLabel("");
+		lbl_infoLastName.setHorizontalTextPosition(SwingConstants.CENTER);
+		lbl_infoLastName.setHorizontalAlignment(SwingConstants.CENTER);
+		lbl_infoLastName.setFont(new Font("Consolas", Font.PLAIN, 14));
+		lbl_infoLastName.setVisible(false);
+		lbl_infoLastName.setBounds(346, 92, 128, 26);
+		frmStatus.getContentPane().add(lbl_infoLastName);
+		
+		lbl_infoName = new JLabel("");
+		lbl_infoName.setHorizontalTextPosition(SwingConstants.CENTER);
+		lbl_infoName.setHorizontalAlignment(SwingConstants.CENTER);
+		lbl_infoName.setFont(new Font("Consolas", Font.PLAIN, 14));
+		lbl_infoName.setVisible(false);
+		lbl_infoName.setBounds(346, 45, 128, 26);
+		frmStatus.getContentPane().add(lbl_infoName);
 	}
 	
 	
@@ -271,30 +284,31 @@ public class StatusMenu {
 		this.pass = pass;
 	}
 
-	protected void getInformation() {
-		session = HibernateConfig.getCurrentSession();
-		
-		Student std = HibernateConfig.getCurrentSession().get(Student.class, user);
-		
-	}
-
 	protected void show() {
 		if (btnShowStatus.getText().equals("Show Status")) {
 			btnShowStatus.setText("Hide Status");
+			lblName.setVisible(true);
+			lblLastname.setVisible(true);
 			lblCarrer.setVisible(true);
 			lblAvg.setVisible(true);
 			lblSubjectsIn.setVisible(true);
 			lblYearsIn.setVisible(true);
+			lbl_infoName.setVisible(true);
+			lbl_infoLastName.setVisible(true);
 			lbl_infoCar.setVisible(true);
 			lbl_infoAvg.setVisible(true);
 			lbl_infoSI.setVisible(true);
 			lbl_infoYI.setVisible(true);
 		} else {
 			btnShowStatus.setText("Show Status");
+			lblName.setVisible(false);
+			lblLastname.setVisible(false);
 			lblCarrer.setVisible(false);
 			lblAvg.setVisible(false);
 			lblSubjectsIn.setVisible(false);
 			lblYearsIn.setVisible(false);
+			lbl_infoName.setVisible(false);
+			lbl_infoLastName.setVisible(false);
 			lbl_infoCar.setVisible(false);
 			lbl_infoAvg.setVisible(false);
 			lbl_infoSI.setVisible(false);
@@ -302,6 +316,45 @@ public class StatusMenu {
 		}
 	}
 
+	protected void getInformation() {		
+		Query query;
+		
+		//Se realiza una consulta por usuario para obtener el nombre y el apellido del usuario.
+		Student std = HibernateConfig.getCurrentSession().get(Student.class, this.user);
+		
+
+		//Se realiza una consulta para obtener la carrera y almacenarla en la etiqueta de carrera.
+		Carrer car = null;
+		
+		query = HibernateConfig.getCurrentSession().createQuery("FROM Carrer c WHERE c.id = :idCarrer"); 
+		query.setParameter("idCarrer", std.getIdCarrer());
+		car = (Carrer) query.uniqueResult();
+		
+		//Se realiza una consulta para obtener las materias aprobadas hasta el momento.
+		int subjectCounter = 0;
+		/*
+		
+		query = HibernateConfig.getCurrentSession().createQuery("FROM Enrollment e WHERE e.student_username = :Students_username");
+		query.setParameter("Students_username", std.getUsername());
+		List<Enrollment> enrollments = (List<Enrollment>) query.list();
+		
+		for (Enrollment enrollment : enrollments) {
+			subjectCounter++;
+		}
+		*/
+		//Se realiza una consulta para obtener el promedio de las materias aprobadas hastas el momento.
+		
+		//Se calcula el promedio de años completados hasta el momento.
+		int yearCounter = subjectCounter / 8;
+		
+		//Se actualizan los datos obtenidos en las etiquetas
+		lbl_infoName.setText(std.getName());
+		lbl_infoLastName.setText(std.getLastName());
+		lbl_infoCar.setText(car.getName());
+		lbl_infoSI.setText(subjectCounter + "/44");
+		lbl_infoYI.setText(yearCounter + "/6");
+	}
+	
 	public JFrame getFrmStatus() {
 		return frmStatus;
 	}

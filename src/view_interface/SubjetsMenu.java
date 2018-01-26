@@ -13,6 +13,7 @@ import java.awt.Font;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import java.awt.Color;
+import javax.swing.JLabel;
 
 public class SubjetsMenu {
 
@@ -50,13 +51,8 @@ public class SubjetsMenu {
 		frmSubjets.setBounds(100, 100, 450, 430);
 		frmSubjets.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		JButton btnNewButton = new JButton("In Progress");
-		btnNewButton.setFont(new Font("Consolas", Font.PLAIN, 18));
-		
-		JButton btnNewButton_1 = new JButton("Next Step");
-		btnNewButton_1.setFont(new Font("Consolas", Font.PLAIN, 18));
-		
-		JButton btnAddSubject = new JButton("Add Subject");
+		JButton btnAddSubject = new JButton("Add/Modify");
+		btnAddSubject.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnAddSubject.setFont(new Font("Consolas", Font.PLAIN, 18));
 		
 		JButton btnExit = new JButton("Exit");
@@ -74,53 +70,56 @@ public class SubjetsMenu {
 		separator.setForeground(new Color(0, 0, 0));
 		separator.setOrientation(SwingConstants.VERTICAL);
 		
-		JButton btnNewButton_2 = new JButton("Change Status");
-		btnNewButton_2.setFont(new Font("Consolas", Font.PLAIN, 18));
+		JLabel lblInProgress = new JLabel("In Progress");
+		lblInProgress.setFont(new Font("Consolas", Font.PLAIN, 18));
+		lblInProgress.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		JLabel lblNextStep = new JLabel("Next Step");
+		lblNextStep.setFont(new Font("Consolas", Font.PLAIN, 18));
+		lblNextStep.setHorizontalAlignment(SwingConstants.CENTER);
 		GroupLayout groupLayout = new GroupLayout(frmSubjets.getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap()
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(scrollPaneP, GroupLayout.PREFERRED_SIZE, 167, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 153, GroupLayout.PREFERRED_SIZE)
-						.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
-							.addComponent(btnNewButton_2, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-							.addComponent(btnAddSubject, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)))
-					.addGap(37)
-					.addComponent(separator, GroupLayout.PREFERRED_SIZE, 11, GroupLayout.PREFERRED_SIZE)
-					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(26)
-							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-								.addGroup(groupLayout.createSequentialGroup()
-									.addPreferredGap(ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
-									.addComponent(btnNewButton_1, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE))
-								.addComponent(scrollPaneN, GroupLayout.PREFERRED_SIZE, 167, GroupLayout.PREFERRED_SIZE)))
+							.addGap(36)
+							.addComponent(lblInProgress, GroupLayout.PREFERRED_SIZE, 138, GroupLayout.PREFERRED_SIZE))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addContainerGap()
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(btnAddSubject, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addComponent(scrollPaneP, GroupLayout.PREFERRED_SIZE, 186, GroupLayout.PREFERRED_SIZE))))
+					.addGap(18)
+					.addComponent(separator, GroupLayout.PREFERRED_SIZE, 11, GroupLayout.PREFERRED_SIZE)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(btnExit, GroupLayout.PREFERRED_SIZE, 153, GroupLayout.PREFERRED_SIZE)))
+							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+								.addComponent(btnExit, GroupLayout.PREFERRED_SIZE, 153, GroupLayout.PREFERRED_SIZE)
+								.addComponent(scrollPaneN, GroupLayout.PREFERRED_SIZE, 186, GroupLayout.PREFERRED_SIZE)))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(47)
+							.addComponent(lblNextStep, GroupLayout.PREFERRED_SIZE, 108, GroupLayout.PREFERRED_SIZE)))
 					.addContainerGap())
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(24)
-					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnNewButton_1, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE))
+					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+						.addComponent(lblInProgress, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblNextStep, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 						.addComponent(scrollPaneP, GroupLayout.PREFERRED_SIZE, 196, GroupLayout.PREFERRED_SIZE)
 						.addComponent(scrollPaneN, GroupLayout.PREFERRED_SIZE, 196, GroupLayout.PREFERRED_SIZE))
-					.addGap(10)
-					.addComponent(btnAddSubject, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
-					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-						.addComponent(btnExit, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnNewButton_2, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(btnAddSubject)
+					.addGap(16)
+					.addComponent(btnExit, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap())
-				.addComponent(separator, GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)
+				.addComponent(separator, GroupLayout.DEFAULT_SIZE, 383, Short.MAX_VALUE)
 		);
 		frmSubjets.getContentPane().setLayout(groupLayout);
 	}

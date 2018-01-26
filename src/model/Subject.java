@@ -29,27 +29,15 @@ public class Subject implements Serializable{
 	@Column(name="Carrers_idCarrer")
 	private int idCarrer;
 	
-	@Column(name="markOne")
-	private float markOne;
-	
-	@Column(name="markTwo")
-	private float markTwo;
-	
-	@Column(name="average")
-	private float average;
-	
 	public Subject() {
 	}
 	
-	public Subject (String name, int code, String correlatives, int hoursWeek, int idCarrer, float markOne, float markTwo, float average){
+	public Subject (String name, int code, String correlatives, int hoursWeek, int idCarrer){
 		this.name = name;
 		this.code = code;
 		this.correlatives = correlatives;
 		this.hoursWeek = hoursWeek;
 		this.idCarrer = idCarrer;
-		this.markOne = markOne;
-		this.markTwo = markTwo;
-		this.average = average;
 	}
 
 	public String getName() {
@@ -99,28 +87,5 @@ public class Subject implements Serializable{
 	public void setIdCarrer(int idCarrer) {
 		this.idCarrer = idCarrer;
 	}
-
-	public float getMarkOne() {
-		return markOne;
-	}
-
-	public void setMarkOne(float markOne) {
-		this.markOne = markOne;
-	}
-
-	public float getMarkTwo() {
-		return markTwo;
-	}
-
-	public void setMarkTwo(float markTwo) {
-		this.markTwo = markTwo;
-	}
-
-	public float getAverage() {
-		return average;
-	}
-
-	public void setAverage(float average) {
-		this.average = average;
-	}
+	
 }
