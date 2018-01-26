@@ -18,13 +18,21 @@ public class Student implements Serializable{
 	@Column(name="password")
 	private String password;
 	
+	@Column(name="name")
+	private String name;
+	
+	@Column(name="lastname")
+	private String lastName;
+	
 	@Column(name="Carrers_idCarrer")
 	private int idCarrer;
 	
-	public Student (String user, String pass, int id){
+	public Student (String user, String pass, String name, String lastname, int idCarrer){
 		this.username = user;
 		this.password = pass;
-		this.idCarrer = id;
+		this.name = name;
+		this.lastName = lastname;
+		this.idCarrer = idCarrer;
 	}
 
 	public Student() {
@@ -44,9 +52,24 @@ public class Student implements Serializable{
 		return password;
 	}
 
-
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 	public int getIdCarrer() {
@@ -55,6 +78,11 @@ public class Student implements Serializable{
 
 	public void setIdCarrer(int idCarrer) {
 		this.idCarrer = idCarrer;
+	}
+
+	@Override
+	public String toString(){
+		return username + " " + password;
 	}
 	
 }

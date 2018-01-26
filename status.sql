@@ -1,2 +1,6 @@
 SELECT *
 from students
+subjects
+
+
+

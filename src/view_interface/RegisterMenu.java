@@ -39,6 +39,10 @@ public class RegisterMenu {
 	private JComboBox<String> comboBoxCarrer;
 	
 	private Session session;
+	private JLabel lblName;
+	private JLabel lblLastname;
+	private JTextField textField_1;
+	private JTextField textField_2;
 
 	/**
 	 * Launch the application.
@@ -69,17 +73,18 @@ public class RegisterMenu {
 	private void initialize() {
 		frame = new JFrame();
 		frame.getContentPane().setFont(new Font("Consolas", Font.PLAIN, 18));
-		frame.setBounds(100, 100, 450, 300);
+		frame.setBounds(100, 100, 450, 453);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
 		
 		btnConfirm = new JButton("Confirm");
-		btnConfirm.setBounds(26, 210, 111, 31);
+		btnConfirm.setBounds(44, 342, 111, 31);
 		btnConfirm.setFont(new Font("Consolas", Font.PLAIN, 18));
 		btnConfirm.setEnabled(false);
 		btnConfirm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				register();
+				registerUser();
+				
 				exit();
 			}
 		});
@@ -90,7 +95,7 @@ public class RegisterMenu {
 		textField.setColumns(10);
 		
 		btnExit = new JButton("Exit");
-		btnExit.setBounds(301, 210, 111, 30);
+		btnExit.setBounds(297, 342, 111, 30);
 		btnExit.setFont(new Font("Consolas", Font.PLAIN, 18));
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -99,19 +104,19 @@ public class RegisterMenu {
 		});
 		
 		JLabel lblUsername = new JLabel("Username");
-		lblUsername.setBounds(74, 42, 91, 23);
+		lblUsername.setBounds(64, 40, 91, 23);
 		lblUsername.setHorizontalAlignment(SwingConstants.CENTER);
 		lblUsername.setFont(new Font("LLPixel", Font.PLAIN, 18));
 		
 		JLabel lblPassword = new JLabel("Password");
-		lblPassword.setBounds(76, 90, 89, 23);
+		lblPassword.setBounds(64, 90, 89, 23);
 		lblPassword.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPassword.setFont(new Font("LLPixel", Font.PLAIN, 18));
 		
 		JLabel lblDegree = new JLabel("Carrer");
 		lblDegree.setVerticalAlignment(SwingConstants.TOP);
-		lblDegree.setBounds(74, 139, 91, 25);
-		lblDegree.setHorizontalAlignment(SwingConstants.CENTER);
+		lblDegree.setBounds(64, 246, 91, 25);
+		lblDegree.setHorizontalAlignment(SwingConstants.LEFT);
 		lblDegree.setFont(new Font("LLPixel", Font.PLAIN, 18));
 		
 		passwordField = new JPasswordField();
@@ -131,7 +136,7 @@ public class RegisterMenu {
 		comboBoxCarrer.addItem("Choose a Carrer");
 		comboBoxCarrer.addItem("ING.EN INFORMATICA");
 		comboBoxCarrer.setSelectedItem(0);
-		comboBoxCarrer.setBounds(172, 139, 184, 27);
+		comboBoxCarrer.setBounds(172, 246, 184, 27);
 		comboBoxCarrer.setFont(new Font("Consolas", Font.PLAIN, 14));
 		frame.getContentPane().setLayout(null);
 		frame.getContentPane().add(btnConfirm);
@@ -142,28 +147,50 @@ public class RegisterMenu {
 		frame.getContentPane().add(comboBoxCarrer);
 		frame.getContentPane().add(textField);
 		frame.getContentPane().add(passwordField);
+		
+		lblName = new JLabel("Name");
+		lblName.setHorizontalAlignment(SwingConstants.LEFT);
+		lblName.setFont(new Font("LLPixel", Font.PLAIN, 18));
+		lblName.setBounds(64, 143, 91, 16);
+		frame.getContentPane().add(lblName);
+		
+		lblLastname = new JLabel("Lastname");
+		lblLastname.setHorizontalAlignment(SwingConstants.LEFT);
+		lblLastname.setFont(new Font("LLPixel", Font.PLAIN, 18));
+		lblLastname.setBounds(64, 191, 101, 23);
+		frame.getContentPane().add(lblLastname);
+		
+		textField_1 = new JTextField();
+		textField_1.setBounds(172, 142, 184, 25);
+		frame.getContentPane().add(textField_1);
+		textField_1.setColumns(10);
+		
+		textField_2 = new JTextField();
+		textField_2.setBounds(172, 194, 184, 25);
+		frame.getContentPane().add(textField_2);
+		textField_2.setColumns(10);
 	}
 
-	private void register() {
-		//Se crea un estudiante para almacenar la informacion ingresada por el usuario
+	private void registerUser() {
+		//Se crea un usuario para almacenar la informacion ingresada por el teclado
 		int valueCombo = comboBoxCarrer.getSelectedIndex();
-		Student std = new Student(this.textField.getText(),
-				String.valueOf(passwordField.getPassword()), valueCombo);
+		Student user = new Student(this.textField.getText(),
+				String.valueOf(passwordField.getPassword()), this.textField_1.getText(), this.textField_2.getText(),
+				valueCombo);
 		
 		//Se inicia sesion de Hibernate con la Base de Datos
 		session = HibernateConfig.getCurrentSession();
 		//Se informa que se va transmitir informacion a la Base de Datos
 		try {
-			//Se guarda el estudiante en la session para luego enviarse mediante el commit hacia la Base de Datos
+			//Se guarda el user en la session para luego enviarse mediante el commit hacia la Base de Datos
 			// Y luego se cierra la sesion.
 			session.beginTransaction();
-			session.save(std);
+			session.save(user);
 			session.getTransaction().commit();
 			session.close();
 			
 			JOptionPane.showMessageDialog(null, "Registro completado");
 		} catch (Exception e) {
-			//En caso de que haya algun error se realiza un rollback(Se retorna la Base de Datos a un punto seguro).
 			JOptionPane.showMessageDialog(null, "Error al cargar el usuario en la Base de Datos");
 		}
 	}
@@ -181,5 +208,4 @@ public class RegisterMenu {
 	public void setFrame(JFrame frame) {
 		this.frame = frame;
 	}
-	
 }

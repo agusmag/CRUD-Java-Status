@@ -111,6 +111,7 @@ public class StartMenu {
 	}
 
 	protected void exit() {
+		HibernateConfig.closeSessionFactory();
 		System.exit(0);
 	}
 

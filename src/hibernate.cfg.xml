@@ -16,6 +16,7 @@
      	<mapping class = "model.Student"/>
      	<mapping class = "model.Subject"/>
      	<mapping class = "model.Carrer"/>
+     	<mapping class = "model.Enrollment"/>
      	
     </session-factory>
 </hibernate-configuration>

@@ -19,9 +19,6 @@ import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-
 import hibernate.HibernateConfig;
 import model.Student;
 
@@ -29,10 +26,10 @@ import java.awt.Dimension;
 import java.awt.Insets;
 
 public class LoginMenu {
-
+	
+	private JTextField textFieldLg;
+	private JPasswordField passwordFieldLg;
 	private JFrame frmLogin;
-	private JTextField txtUser;
-	private JPasswordField passField;
 	private JButton btnExit;
 	private JButton btnConfirm;
 	
@@ -79,7 +76,21 @@ public class LoginMenu {
 		
 		btnConfirm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				login();
+				Student std = login();
+				
+				if (std == null){
+					JOptionPane.showMessageDialog(null, "Nombre de Usuario o Contraseña incorrectos");
+					textFieldLg.setText("");
+					passwordFieldLg.setText("");
+					textFieldLg.requestFocus();
+					btnConfirm.setEnabled(false);
+				}else {
+					JOptionPane.showMessageDialog(null, "Bienvenido");
+					StatusMenu stMenu = new StatusMenu();
+					stMenu.setUser(textFieldLg.getText());
+					stMenu.getFrmStatus().setVisible(true);
+					frmLogin.dispose();
+				}
 			}
 		});
 		
@@ -97,10 +108,10 @@ public class LoginMenu {
 
 		btnExit.setFont(new Font("Consolas", Font.PLAIN, 18));
 		
-		txtUser = new JTextField();
-		txtUser.setBounds(228, 23, 155, 25);
-		txtUser.setHorizontalAlignment(SwingConstants.LEFT);
-		txtUser.setColumns(10);
+		textFieldLg = new JTextField();
+		textFieldLg.setBounds(228, 23, 155, 25);
+		textFieldLg.setHorizontalAlignment(SwingConstants.LEFT);
+		textFieldLg.setColumns(10);
 		
 		JLabel lblUsername = new JLabel("Username");
 		lblUsername.setBounds(86, 23, 130, 29);
@@ -112,12 +123,12 @@ public class LoginMenu {
 		lblPassword.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPassword.setFont(new Font("LLPixel", Font.PLAIN, 18));
 		
-		passField = new JPasswordField();
-		passField.setBounds(228, 70, 155, 27);
-		passField.addKeyListener(new KeyAdapter() {
+		passwordFieldLg = new JPasswordField();
+		passwordFieldLg.setBounds(228, 70, 155, 27);
+		passwordFieldLg.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if (txtUser.getText() != "" && String.valueOf(passField.getPassword()) != ""){
+				if (textFieldLg.getText() != "" && String.valueOf(passwordFieldLg.getPassword()) != ""){
 					btnConfirm.setEnabled(true);
 				}
 			}
@@ -125,8 +136,8 @@ public class LoginMenu {
 		frmLogin.getContentPane().setLayout(null);
 		frmLogin.getContentPane().add(lblUsername);
 		frmLogin.getContentPane().add(lblPassword);
-		frmLogin.getContentPane().add(passField);
-		frmLogin.getContentPane().add(txtUser);
+		frmLogin.getContentPane().add(passwordFieldLg);
+		frmLogin.getContentPane().add(textFieldLg);
 		frmLogin.getContentPane().add(btnConfirm);
 		frmLogin.getContentPane().add(btnExit);
 		
@@ -153,6 +164,22 @@ public class LoginMenu {
 		this.frmLogin = frmLogin;
 		}
 
+	public JTextField getTextField() {
+		return textFieldLg;
+	}
+
+	public void setTextField(JTextField txtUser) {
+		this.textFieldLg = txtUser;
+	}
+
+	public JPasswordField getPasswodField() {
+		return passwordFieldLg;
+	}
+
+	public void setPasswodField(JPasswordField passField) {
+		this.passwordFieldLg = passField;
+	}
+
 	private void exit() {
 		frmLogin.dispose();
 		StartMenu stMenu = new StartMenu();
@@ -161,10 +188,14 @@ public class LoginMenu {
 	}
 
 	private Student login() {
-		String username = txtUser.getText();
-		String password = String.valueOf(passField.getPassword()); //Se convierte a String ya que esta en otro formato
+		//Se crea un estudiante para recibir la consulta de la Base de Datos
+		//Se crea un String username y una password para utilizarlo como filtro de bulqueda(PK).
 		Student std = new Student();
-		/*	
+		String user = textFieldLg.getText();
+		String pass = String.valueOf(passwordFieldLg.getPassword());
+		
+		/*
+		 * CODIGO NO UTILIZADO, FORMA DIRECTA DE ACCEDER A LA BASE DE DATOS
 		UserManager um = new UserManager();
 			
 		Student std2 = new Student();
@@ -176,8 +207,8 @@ public class LoginMenu {
 		if (std != null){
 			JOptionPane.showMessageDialog(null, "Bienvenido");
 			StatusMenu stMenu = new StatusMenu();
-		stMenu.getFrmStatus().setVisible(true);
-		frmLogin.dispose();
+			stMenu.getFrmStatus().setVisible(true);
+			frmLogin.dispose();
 		}else {
 			JOptionPane.showMessageDialog(null, "Problema con el usuario o Contraseña", "Error", JOptionPane.ERROR_MESSAGE);
 			txtUser.setText("");
@@ -185,21 +216,21 @@ public class LoginMenu {
 			txtUser.requestFocus();
 			btnConfirm.setEnabled(false);
 		}
+		* FIN CODIGO NO UTILIZADO
 		*/
 		
 		//Se obtiene la sesion brindada por Hibernate
 		session = HibernateConfig.getCurrentSession();
 		//Se informa que se va transmitir informacion a la Base de Datos
-				
 		try {
 			//Se guarda el estudiante en la session para luego enviarse mediante el commit hacia la Base de Datos
 			// Y luego se cierra la sesion.
-			std = (Student) session.get(Student.class, std);
-			session.getTransaction().commit();
-			session.close();
+			std = HibernateConfig.getCurrentSession().get(Student.class, user);
+			return std;
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Error al cargar el usuario en la Base de Datos");
+			return null;
 		}
-		return std;
+		
 	}
 }
