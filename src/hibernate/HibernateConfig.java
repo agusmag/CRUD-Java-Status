@@ -7,6 +7,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
 import model.Carrer;
+import model.Enrollment;
 import model.Student;
 import model.Subject;
 
@@ -25,6 +26,7 @@ public class HibernateConfig {
 		configuration.addAnnotatedClass(Student.class);
 		configuration.addAnnotatedClass(Subject.class);
 		configuration.addAnnotatedClass(Carrer.class);
+		configuration.addAnnotatedClass(Enrollment.class);
 		
 		ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(
 			      configuration.getProperties()).build();

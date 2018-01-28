@@ -4,11 +4,16 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="enrollment")
+@Table(name="enrollments")
 public class Enrollment implements Serializable{
+	
+	@Id
+	@Column(name="id")
+	private int id;
 	
 	@Column(name="Subjects_code")
 	private int subject_code;
@@ -20,7 +25,7 @@ public class Enrollment implements Serializable{
 	private String student_username;
 	
 	@Column(name="status")
-	private char status;
+	private String status;
 	
 	@Column(name="markOne")
 	private float markOne;
@@ -34,7 +39,8 @@ public class Enrollment implements Serializable{
 	public Enrollment(){
 	}
 
-	public Enrollment(int subject_code, int idCarrer, String username, char status, float markOne, float markTwo, float avg) {
+	public Enrollment(int id, int subject_code, int idCarrer, String username, String status, float markOne, float markTwo, float avg) {
+		this.id = id;
 		this.subject_code = subject_code;
 		this.idCarrer = idCarrer;
 		this.student_username = username;
@@ -44,6 +50,14 @@ public class Enrollment implements Serializable{
 		this.average = avg;
 	}
 	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public void setSubject_code(int subject_code){
 		this.subject_code = subject_code;
 	}
@@ -68,11 +82,11 @@ public class Enrollment implements Serializable{
 		this.student_username = student_username;
 	}
 
-	public char getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(char status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 	

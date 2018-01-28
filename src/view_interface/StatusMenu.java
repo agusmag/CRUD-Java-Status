@@ -10,6 +10,8 @@ import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.Font;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Color;
 import javax.swing.SwingConstants;
 
@@ -43,6 +45,7 @@ public class StatusMenu {
 	
 	private String user;
 	private String pass;
+	private int idCarrer;
 	
 	private Session session;
 	private JLabel lblLastname;
@@ -105,6 +108,16 @@ public class StatusMenu {
 		btnShowStatus.setFont(new Font("LLPixel", Font.PLAIN, 18));
 		
 		btnSubjets = new JButton("Subjects");
+		btnSubjets.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				SubjectsMenu sbMenu = new SubjectsMenu();
+				frmStatus.dispose();
+				sbMenu.setUser(user);
+				sbMenu.setPass(pass);
+				sbMenu.setIdCarrer(idCarrer);
+				sbMenu.getFrmSubjets().setVisible(true);
+			}
+		});
 		btnSubjets.setBounds(12, 131, 157, 33);
 		btnSubjets.setFont(new Font("Consolas", Font.PLAIN, 18));
 		
@@ -284,6 +297,14 @@ public class StatusMenu {
 		this.pass = pass;
 	}
 
+	public int getIdCarrer() {
+		return idCarrer;
+	}
+
+	public void setIdCarrer(int idCarrer) {
+		this.idCarrer = idCarrer;
+	}
+
 	protected void show() {
 		if (btnShowStatus.getText().equals("Show Status")) {
 			btnShowStatus.setText("Hide Status");
@@ -320,41 +341,52 @@ public class StatusMenu {
 		Query query;
 		
 		//Se realiza una consulta por usuario para obtener el nombre y el apellido del usuario.
-		Student std = HibernateConfig.getCurrentSession().get(Student.class, this.user);
 		
-
-		//Se realiza una consulta para obtener la carrera y almacenarla en la etiqueta de carrera.
-		Carrer car = null;
-		
-		query = HibernateConfig.getCurrentSession().createQuery("FROM Carrer c WHERE c.id = :idCarrer"); 
-		query.setParameter("idCarrer", std.getIdCarrer());
-		car = (Carrer) query.uniqueResult();
-		
-		//Se realiza una consulta para obtener las materias aprobadas hasta el momento.
-		int subjectCounter = 0;
-		/*
-		
-		query = HibernateConfig.getCurrentSession().createQuery("FROM Enrollment e WHERE e.student_username = :Students_username");
-		query.setParameter("Students_username", std.getUsername());
-		List<Enrollment> enrollments = (List<Enrollment>) query.list();
-		
-		for (Enrollment enrollment : enrollments) {
-			subjectCounter++;
-		}
-		*/
-		//Se realiza una consulta para obtener el promedio de las materias aprobadas hastas el momento.
-		
-		//Se calcula el promedio de años completados hasta el momento.
-		int yearCounter = subjectCounter / 8;
-		
-		//Se actualizan los datos obtenidos en las etiquetas
-		lbl_infoName.setText(std.getName());
-		lbl_infoLastName.setText(std.getLastName());
-		lbl_infoCar.setText(car.getName());
-		lbl_infoSI.setText(subjectCounter + "/44");
-		lbl_infoYI.setText(yearCounter + "/6");
-	}
+		try {
+			Student std = HibernateConfig.getCurrentSession().get(Student.class, this.user);
+			
 	
+			//Se realiza una consulta para obtener la carrera y almacenarla en la etiqueta de carrera.
+			Carrer car = null;
+			
+			query = HibernateConfig.getCurrentSession().createQuery("FROM Carrer c WHERE c.id = :idCarrer"); 
+			query.setParameter("idCarrer", std.getIdCarrer());
+			car = (Carrer) query.uniqueResult();
+			
+			//Se realiza una consulta para obtener las materias aprobadas hasta el momento.
+			int subjectCounter = 0;
+			
+			query = HibernateConfig.getCurrentSession().createQuery
+					("FROM Enrollment e WHERE e.student_username = :Students_username and e.status = :status");
+			query.setParameter("Students_username", std.getUsername());
+			query.setParameter("status", "APROBADA");
+			List<Enrollment> enrollments = (List<Enrollment>) query.list();
+			
+			for (Enrollment enrollment : enrollments) {
+				subjectCounter++;
+			}
+			
+			//Se realiza una consulta para obtener el promedio de las materias aprobadas hastas el momento.
+			float avg, total = 0;
+			for (Enrollment enrollment : enrollments) {
+				total += enrollment.getAverage();
+			}
+			avg = total/subjectCounter;
+			
+			//Se calcula el promedio de años completados hasta el momento.
+			int yearCounter = subjectCounter / 8;
+			
+			//Se actualizan los datos obtenidos en las etiquetas
+			lbl_infoName.setText(std.getName());
+			lbl_infoLastName.setText(std.getLastName());
+			lbl_infoCar.setText(car.getName());
+			lbl_infoSI.setText(subjectCounter + "/44");
+			lbl_infoYI.setText(yearCounter + "/6");
+			lbl_infoAvg.setText(avg + "/10.0");
+		} catch (Exception e) {
+		JOptionPane.showMessageDialog(null, "Error al obtener los datos del estudiante");
+		}
+	}
 	public JFrame getFrmStatus() {
 		return frmStatus;
 	}

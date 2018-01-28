@@ -19,6 +19,8 @@ import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 
 import org.hibernate.Session;
+import org.hibernate.query.Query;
+
 import hibernate.HibernateConfig;
 import model.Student;
 
@@ -88,6 +90,7 @@ public class LoginMenu {
 					JOptionPane.showMessageDialog(null, "Bienvenido");
 					StatusMenu stMenu = new StatusMenu();
 					stMenu.setUser(textFieldLg.getText());
+					stMenu.setIdCarrer(std.getIdCarrer());
 					stMenu.getFrmStatus().setVisible(true);
 					frmLogin.dispose();
 				}
@@ -189,7 +192,7 @@ public class LoginMenu {
 
 	private Student login() {
 		//Se crea un estudiante para recibir la consulta de la Base de Datos
-		//Se crea un String username y una password para utilizarlo como filtro de bulqueda(PK).
+		//Se crea un String username y una password para utilizarlo como filtro de busqueda.
 		Student std = new Student();
 		String user = textFieldLg.getText();
 		String pass = String.valueOf(passwordFieldLg.getPassword());
@@ -219,13 +222,15 @@ public class LoginMenu {
 		* FIN CODIGO NO UTILIZADO
 		*/
 		
-		//Se obtiene la sesion brindada por Hibernate
-		session = HibernateConfig.getCurrentSession();
+		//Se obtiene la sesion brindada por Hibernate y se crea una Query para obtener el usuario correcto
+		Query query = HibernateConfig.getCurrentSession().createQuery("FROM Student s WHERE s.username = :username AND s.password = :password");
+		query.setParameter("username", user);
+		query.setParameter("password", pass);
 		//Se informa que se va transmitir informacion a la Base de Datos
 		try {
 			//Se guarda el estudiante en la session para luego enviarse mediante el commit hacia la Base de Datos
 			// Y luego se cierra la sesion.
-			std = HibernateConfig.getCurrentSession().get(Student.class, user);
+			std = (Student) query.uniqueResult();
 			return std;
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Error al cargar el usuario en la Base de Datos");

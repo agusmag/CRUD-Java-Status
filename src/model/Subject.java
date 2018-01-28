@@ -21,8 +21,6 @@ public class Subject implements Serializable{
 	@Column(name="correlatives")
 	private String correlatives;
 	
-	private ArrayList<Integer> correlativeList;
-	
 	@Column(name="hoursWeek")
 	private int hoursWeek;
 	
@@ -64,14 +62,6 @@ public class Subject implements Serializable{
 		this.correlatives = correlatives;
 	}
 
-	public ArrayList<Integer> getCorrelativeList() {
-		return correlativeList;
-	}
-
-	public void setCorrelativeList(ArrayList<Integer> correlativeList) {
-		this.correlativeList = correlativeList;
-	}
-
 	public int getHoursWeek() {
 		return hoursWeek;
 	}
@@ -86,6 +76,11 @@ public class Subject implements Serializable{
 
 	public void setIdCarrer(int idCarrer) {
 		this.idCarrer = idCarrer;
+	}
+
+	@Override
+	public String toString() {
+		return name;
 	}
 	
 }
