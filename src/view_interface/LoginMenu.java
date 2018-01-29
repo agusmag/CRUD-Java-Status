@@ -90,7 +90,7 @@ public class LoginMenu {
 					JOptionPane.showMessageDialog(null, "Bienvenido");
 					StatusMenu stMenu = new StatusMenu();
 					stMenu.setUser(textFieldLg.getText());
-					stMenu.setIdCarrer(std.getIdCarrer());
+					stMenu.setIdCarrer(std.getCarrer().getIdCarrer());
 					stMenu.getFrmStatus().setVisible(true);
 					frmLogin.dispose();
 				}

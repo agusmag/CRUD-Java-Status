@@ -1,10 +1,17 @@
 package model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -24,15 +31,22 @@ public class Student implements Serializable{
 	@Column(name="lastname")
 	private String lastName;
 	
-	@Column(name="Carrers_idCarrer")
-	private int idCarrer;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "Carrers_idCarrer")
+	private Carrer carrer;
 	
-	public Student (String user, String pass, String name, String lastname, int idCarrer){
-		this.username = user;
-		this.password = pass;
+	@OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+	private List<Enrollment> enrollments = new ArrayList<>();
+
+	public Student(String username, String password, String name, String lastName, Carrer carrer,
+			List<Enrollment> enrollments) {
+		super();
+		this.username = username;
+		this.password = password;
 		this.name = name;
-		this.lastName = lastname;
-		this.idCarrer = idCarrer;
+		this.lastName = lastName;
+		this.carrer = carrer;
+		this.enrollments = enrollments;
 	}
 
 	public Student() {
@@ -41,7 +55,6 @@ public class Student implements Serializable{
 	public String getUsername() {
 		return username;
 	}
-
 
 	public void setUsername(String username) {
 		this.username = username;
@@ -72,17 +85,26 @@ public class Student implements Serializable{
 		this.lastName = lastName;
 	}
 
-	public int getIdCarrer() {
-		return idCarrer;
+	public Carrer getCarrer() {
+		return carrer;
 	}
 
-	public void setIdCarrer(int idCarrer) {
-		this.idCarrer = idCarrer;
+	public void setCarrer(Carrer carrer) {
+		this.carrer = carrer;
+	}
+
+	public List<Enrollment> getEnrollments() {
+		return enrollments;
+	}
+	
+	public void setEnrollments(List<Enrollment> enrollments) {
+		this.enrollments = enrollments;
 	}
 
 	@Override
-	public String toString(){
-		return username + " " + password;
+	public String toString() {
+		return "Student [username=" + username + ", name=" + name + ", lastName=" + lastName + ", carrer=" + carrer
+				+ "]";
 	}
 	
 }

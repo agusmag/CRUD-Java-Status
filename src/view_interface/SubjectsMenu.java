@@ -33,6 +33,8 @@ public class SubjectsMenu {
 
 	private JFrame frmSubjects;
 	private JList listProgress;
+	private JList listComplete;
+	private JList listNext;
 	
 	private String user;
 	private String pass;
@@ -69,11 +71,12 @@ public class SubjectsMenu {
 		frmSubjects.addComponentListener(new ComponentAdapter() {
 		});
 		frmSubjects.setTitle("Subjects");
-		frmSubjects.setBounds(100, 100, 450, 430);
+		frmSubjects.setBounds(100, 100, 712, 564);
 		frmSubjects.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmSubjects.setLocationRelativeTo(null);
 		
-		JButton btnAddSubject = new JButton("Add/Modify");
+		JButton btnAddSubject = new JButton("Add");
+		btnAddSubject.setVisible(false);
 		btnAddSubject.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frmSubjects.dispose();
@@ -83,7 +86,7 @@ public class SubjectsMenu {
 				csMenu.getFrmChangeSubject().setVisible(true);
 			}
 		});
-		btnAddSubject.setBounds(14, 327, 186, 31);
+		btnAddSubject.setBounds(35, 289, 186, 31);
 		btnAddSubject.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnAddSubject.setFont(new Font("Consolas", Font.PLAIN, 18));
 		
@@ -97,21 +100,21 @@ public class SubjectsMenu {
 				stMenu.getFrmStatus().setVisible(true);
 			}
 		});
-		btnBack.setBounds(267, 325, 153, 33);
+		btnBack.setBounds(267, 471, 153, 33);
 		btnBack.setFont(new Font("Consolas", Font.PLAIN, 18));
 		
 		JSeparator separator = new JSeparator();
-		separator.setBounds(216, 0, 11, 383);
+		separator.setBounds(239, 0, 11, 405);
 		separator.setForeground(new Color(0, 0, 0));
 		separator.setOrientation(SwingConstants.VERTICAL);
 		
 		JLabel lblInProgress = new JLabel("In Progress");
-		lblInProgress.setBounds(36, 24, 138, 31);
+		lblInProgress.setBounds(59, 24, 138, 31);
 		lblInProgress.setFont(new Font("Consolas", Font.PLAIN, 18));
 		lblInProgress.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		JLabel lblNextStep = new JLabel("Next Step");
-		lblNextStep.setBounds(274, 31, 108, 31);
+		lblNextStep.setBounds(297, 24, 108, 31);
 		lblNextStep.setFont(new Font("Consolas", Font.PLAIN, 18));
 		lblNextStep.setHorizontalAlignment(SwingConstants.CENTER);
 		
@@ -121,7 +124,16 @@ public class SubjectsMenu {
 		DefaultListModel<String> listModel = new DefaultListModel<String>();
 		listProgress.setModel(listModel);
 		
-		listProgress.setBounds(12, 61, 186, 204);
+		
+		listNext = new JList();
+		listNext.setBounds(257, 61, 186, 204);
+		
+		listComplete = new JList();
+		listComplete.setBounds(473, 61, 186, 331);
+		DefaultListModel<String> listModelC = new DefaultListModel<String>();
+		listComplete.setModel(listModelC);
+		
+		listProgress.setBounds(35, 61, 186, 204);
 		frmSubjects.getContentPane().setLayout(null);
 		frmSubjects.getContentPane().add(btnAddSubject);
 		frmSubjects.getContentPane().add(listProgress);
@@ -129,35 +141,107 @@ public class SubjectsMenu {
 		frmSubjects.getContentPane().add(separator);
 		frmSubjects.getContentPane().add(btnBack);
 		frmSubjects.getContentPane().add(lblNextStep);
-		
-		JList listNext = new JList();
-		listNext.setBounds(234, 61, 186, 204);
+		frmSubjects.getContentPane().add(listComplete);
 		frmSubjects.getContentPane().add(listNext);
-		
+
 		JButton btnShow = new JButton("Show");
 		btnShow.setFont(new Font("Consolas", Font.PLAIN, 18));
-		btnShow.setBounds(36, 279, 138, 35);
+		btnShow.setBounds(267, 423, 153, 35);
 		frmSubjects.getContentPane().add(btnShow);
+		
+		JButton btnModify = new JButton("Modify");
+		btnModify.setVisible(false);
+		btnModify.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ModifySubjectMenu msMenu = new ModifySubjectMenu();
+				for (int i = 0; i < listModel.size(); i++) {
+					msMenu.getSubjectsCombo().addItem(listModel.getElementAt(i));
+				}
+				msMenu.getFrame().setVisible(true);
+				frmSubjects.dispose();
+				/*
+				//Se realiza una consulta para obtener el estado y notas de la materia seleccionada
+				query = HibernateConfig.getCurrentSession().createQuery
+						("FROM Enrollment e WHERE e.student_username = :Students_username AND e.subject_code = :Subjects_code");
+				query.setParameter("Students_username", user);
+				query.setParameter("Subjects_code", sbj.getCode());
+				enrollment = (Enrollment) query.uniqueResult();
+				if (enrollment.getStatus() != null) {
+					System.out.println("ENTRE");
+					switch (enrollment.getStatus()) {
+						case"APROBADA":
+						case"REPROBADA":
+							lblMarkOne.setText(String.valueOf(enrollment.getMarkOne()));
+							lblMarkTwo.setText(String.valueOf(enrollment.getMarkTwo()));;
+							markOneCombo.setVisible(true);
+							markTwoCombo.setVisible(true);
+							break;
+						case"CURSANDO":
+							lblFirstMark.setVisible(true);
+							lblSecondMark.setVisible(true);
+							for (int i = 1; i < 11; i++) {
+								markOneCombo.addItem(i);
+								markTwoCombo.addItem(i);
+							}
+							markOneCombo.setVisible(true);
+							markTwoCombo.setVisible(true);
+							break;
+					}
+					btnConfirm.setText("Modify Subject");
+				} else {
+					statusCombo.setSelectedItem("NO CURSANDO");
+					btnConfirm.setText("Add Subject");
+				}
+				*/
+			}
+		});
+		btnModify.setFont(new Font("Consolas", Font.PLAIN, 18));
+		btnModify.setBounds(35, 333, 186, 31);
+		frmSubjects.getContentPane().add(btnModify);
+		
+		JSeparator separator_1 = new JSeparator();
+		separator_1.setOrientation(SwingConstants.VERTICAL);
+		separator_1.setForeground(Color.BLACK);
+		separator_1.setBounds(455, 0, 11, 405);
+		frmSubjects.getContentPane().add(separator_1);
+		
+		
+		JLabel lblComplete = new JLabel("Complete");
+		lblComplete.setHorizontalAlignment(SwingConstants.CENTER);
+		lblComplete.setFont(new Font("Consolas", Font.PLAIN, 18));
+		lblComplete.setBounds(513, 24, 108, 31);
+		frmSubjects.getContentPane().add(lblComplete);
+		
+		JSeparator separator_2 = new JSeparator();
+		separator_2.setForeground(Color.BLACK);
+		separator_2.setBounds(12, 405, 670, 13);
+		frmSubjects.getContentPane().add(separator_2);
 		btnShow.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			getInformation(listModel);
+			getInformation(listModel, listModelC);
+			btnAddSubject.setVisible(true);
+			btnModify.setVisible(true);
 		}
 		});
 	}
 
-	protected void getInformation(DefaultListModel listModel) {
+	protected void getInformation(DefaultListModel listModel, DefaultListModel listModelC) {
 		//Se realiza una query para almacenar todas las materias que tiene el alumno actualmente.
 		try {
 			Query query = HibernateConfig.getCurrentSession().createQuery("FROM Enrollment e WHERE e.student_username = :Students_username");
 			query.setParameter("Students_username", user);
 			List<Enrollment> enrollments = query.list();
-			//Una vez obtenida la materia, consulto por el nombre de la materia con el codigo obtenido.
+			//Una vez obtenida la materia, se consulta por el nombre de la materia con el codigo obtenido.
 			Subject subject = new Subject();
 			for (Enrollment enrollment : enrollments) {
 				query = HibernateConfig.getCurrentSession().createQuery("FROM Subject s WHERE s.code = :code");
-				query.setParameter("code", enrollment.getSubject_code());
+				query.setParameter("code", enrollment.getSubject().getCode());
 				subject = (Subject) query.uniqueResult();
-				listModel.addElement(subject.toString());
+					if (enrollment.getStatus() == "CURSANDO") {
+					listModel.addElement(subject.toString());
+				} else if (enrollment.getStatus() == "APROBADA"){
+					listModelC.addElement(subject.toString());
+				}
 			}
 			} catch (Exception e) {
 				JOptionPane.showMessageDialog(null, "Error al obtener las materias del estudiante");

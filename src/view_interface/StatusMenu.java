@@ -100,8 +100,6 @@ public class StatusMenu {
 		btnShowStatus.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				show();
-				getInformation();
-				
 			}
 		});
 		btnShowStatus.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -307,6 +305,7 @@ public class StatusMenu {
 
 	protected void show() {
 		if (btnShowStatus.getText().equals("Show Status")) {
+			getInformation();
 			btnShowStatus.setText("Hide Status");
 			lblName.setVisible(true);
 			lblLastname.setVisible(true);
@@ -340,35 +339,26 @@ public class StatusMenu {
 	protected void getInformation() {		
 		Query query;
 		
-		//Se realiza una consulta por usuario para obtener el nombre y el apellido del usuario.
-		
 		try {
+			//Se realiza una consulta por username para obtener los datos del usuario.
 			Student std = HibernateConfig.getCurrentSession().get(Student.class, this.user);
-			
-	
-			//Se realiza una consulta para obtener la carrera y almacenarla en la etiqueta de carrera.
-			Carrer car = null;
-			
-			query = HibernateConfig.getCurrentSession().createQuery("FROM Carrer c WHERE c.id = :idCarrer"); 
-			query.setParameter("idCarrer", std.getIdCarrer());
-			car = (Carrer) query.uniqueResult();
 			
 			//Se realiza una consulta para obtener las materias aprobadas hasta el momento.
 			int subjectCounter = 0;
-			
+			float avg, total = 0;
 			query = HibernateConfig.getCurrentSession().createQuery
-					("FROM Enrollment e WHERE e.student_username = :Students_username and e.status = :status");
+					("FROM Enrollment e WHERE e.student.username = :Students_username AND e.status = :status");
 			query.setParameter("Students_username", std.getUsername());
 			query.setParameter("status", "APROBADA");
-			List<Enrollment> enrollments = (List<Enrollment>) query.list();
+			std.setEnrollments(query.list());
 			
-			for (Enrollment enrollment : enrollments) {
+			//Se calcula el total de materias aprobadas
+			for (Enrollment enrollment : std.getEnrollments()) {
 				subjectCounter++;
 			}
 			
-			//Se realiza una consulta para obtener el promedio de las materias aprobadas hastas el momento.
-			float avg, total = 0;
-			for (Enrollment enrollment : enrollments) {
+			//Se calcula el promedio de las materias aprobadas
+			for (Enrollment enrollment : std.getEnrollments()) {
 				total += enrollment.getAverage();
 			}
 			avg = total/subjectCounter;
@@ -379,12 +369,12 @@ public class StatusMenu {
 			//Se actualizan los datos obtenidos en las etiquetas
 			lbl_infoName.setText(std.getName());
 			lbl_infoLastName.setText(std.getLastName());
-			lbl_infoCar.setText(car.getName());
+			lbl_infoCar.setText(String.valueOf(std.getCarrer().getName()));
 			lbl_infoSI.setText(subjectCounter + "/44");
 			lbl_infoYI.setText(yearCounter + "/6");
 			lbl_infoAvg.setText(avg + "/10.0");
 		} catch (Exception e) {
-		JOptionPane.showMessageDialog(null, "Error al obtener los datos del estudiante");
+			JOptionPane.showMessageDialog(null, "Error al obtener los datos del estudiante");
 		}
 	}
 	public JFrame getFrmStatus() {

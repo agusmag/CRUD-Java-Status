@@ -2,10 +2,16 @@ package model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -24,20 +30,26 @@ public class Subject implements Serializable{
 	@Column(name="hoursWeek")
 	private int hoursWeek;
 	
-	@Column(name="Carrers_idCarrer")
-	private int idCarrer;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "Carrers_idCarrer")
+	private Carrer carrer;
+	
+	@OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
+	private List<Enrollment> enrollments = new ArrayList<>();
 	
 	public Subject() {
 	}
 	
-	public Subject (String name, int code, String correlatives, int hoursWeek, int idCarrer){
+	public Subject(String name, int code, String correlatives, int hoursWeek, Carrer carrer,
+			List<Enrollment> enrollments) {
 		this.name = name;
 		this.code = code;
 		this.correlatives = correlatives;
 		this.hoursWeek = hoursWeek;
-		this.idCarrer = idCarrer;
+		this.carrer = carrer;
+		this.enrollments = enrollments;
 	}
-
+	
 	public String getName() {
 		return name;
 	}
@@ -70,17 +82,26 @@ public class Subject implements Serializable{
 		this.hoursWeek = hoursWeek;
 	}
 
-	public int getIdCarrer() {
-		return idCarrer;
+	public Carrer getCarrer() {
+		return carrer;
 	}
 
-	public void setIdCarrer(int idCarrer) {
-		this.idCarrer = idCarrer;
+	public void setCarrer(Carrer carrer) {
+		this.carrer = carrer;
+	}
+
+	public List<Enrollment> getEnrollments() {
+		return enrollments;
+	}
+
+	public void setEnrollments(List<Enrollment> enrollments) {
+		this.enrollments = enrollments;
 	}
 
 	@Override
 	public String toString() {
-		return name;
+		return "Subject [name=" + name + ", code=" + code + ", correlatives=" + correlatives + ", hoursWeek="
+				+ hoursWeek + ", carrer=" + carrer + "]";
 	}
 	
 }

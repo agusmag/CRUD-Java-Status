@@ -3,29 +3,19 @@ package view_interface;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JTextField;
-import javax.swing.LayoutStyle.ComponentPlacement;
-
 import org.hibernate.Session;
-import org.hibernate.Transaction;
-
 import hibernate.HibernateConfig;
-import maintenance_notUsed.UserManager;
+import model.Carrer;
 import model.Student;
 
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.AbstractListModel;
-import javax.swing.ListSelectionModel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -176,8 +166,7 @@ public class RegisterMenu {
 		int valueCombo = comboBoxCarrer.getSelectedIndex();
 		Student user = new Student(this.textField.getText(),
 				String.valueOf(passwordField.getPassword()), this.textField_1.getText(), this.textField_2.getText(),
-				valueCombo);
-		
+				new Carrer(valueCombo, String.valueOf(comboBoxCarrer.getSelectedItem())),null);
 		//Se inicia sesion de Hibernate con la Base de Datos
 		session = HibernateConfig.getCurrentSession();
 		//Se informa que se va transmitir informacion a la Base de Datos

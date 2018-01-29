@@ -30,7 +30,7 @@ public class UserManager {
 			rs = pst.executeQuery();
 			
 			while (rs.next()){
-				stdUser = new Student(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getShort(5));
+			//	stdUser = new Student(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getShort(5));
 			}
 		} catch (Exception e){
 			JOptionPane.showMessageDialog(null, "Hubo un error con el usuario o la contraseña");
@@ -54,7 +54,7 @@ public class UserManager {
 			//Se carga el pst
 			pst.setString(1, user.getUsername());
 			pst.setString(2, user.getPassword());
-			pst.setInt(3, user.getIdCarrer());
+			pst.setInt(3, user.getCarrer().getIdCarrer());
 			
 			pst.execute();
 			
