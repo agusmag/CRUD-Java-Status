@@ -40,7 +40,6 @@ public class Student implements Serializable{
 
 	public Student(String username, String password, String name, String lastName, Carrer carrer,
 			List<Enrollment> enrollments) {
-		super();
 		this.username = username;
 		this.password = password;
 		this.name = name;
@@ -99,6 +98,14 @@ public class Student implements Serializable{
 	
 	public void setEnrollments(List<Enrollment> enrollments) {
 		this.enrollments = enrollments;
+	}
+	
+	public boolean containSubject(String subjectName) {
+		for (Enrollment enrollment : this.getEnrollments()) {
+			if (enrollment.getSubject().getName().equals(subjectName))
+				return true;
+		}
+		return false;
 	}
 
 	@Override

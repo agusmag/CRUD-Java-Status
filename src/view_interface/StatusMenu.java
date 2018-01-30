@@ -42,17 +42,13 @@ public class StatusMenu {
 	private JLabel lbl_infoSI;
 	private JLabel lbl_infoYI;
 	private JLabel lbl_infoCar;
-	
-	private String user;
-	private String pass;
-	private int idCarrer;
-	
-	private Session session;
 	private JLabel lblLastname;
 	private JLabel lblName;
 	private JLabel lbl_infoLastName;
 	private JLabel lbl_infoName;
-
+	
+	private Student std;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -110,9 +106,7 @@ public class StatusMenu {
 			public void actionPerformed(ActionEvent arg0) {
 				SubjectsMenu sbMenu = new SubjectsMenu();
 				frmStatus.dispose();
-				sbMenu.setUser(user);
-				sbMenu.setPass(pass);
-				sbMenu.setIdCarrer(idCarrer);
+				sbMenu.setStd(std);
 				sbMenu.getFrmSubjets().setVisible(true);
 			}
 		});
@@ -245,8 +239,6 @@ public class StatusMenu {
 		frmStatus.getContentPane().add(lbl_infoName);
 	}
 	
-	
-
 	public JLabel getLbl_infoAvg() {
 		return lbl_infoAvg;
 	}
@@ -279,28 +271,20 @@ public class StatusMenu {
 		this.lbl_infoCar = lbl_infoCar;
 	}
 
-	public String getUser() {
-		return user;
+	public JFrame getFrmStatus() {
+		return frmStatus;
 	}
 
-	public void setUser(String user) {
-		this.user = user;
+	public void setFrmStatus(JFrame frmStatus) {
+		this.frmStatus = frmStatus;
 	}
 
-	public String getPass() {
-		return pass;
+	public Student getStd() {
+		return std;
 	}
 
-	public void setPass(String pass) {
-		this.pass = pass;
-	}
-
-	public int getIdCarrer() {
-		return idCarrer;
-	}
-
-	public void setIdCarrer(int idCarrer) {
-		this.idCarrer = idCarrer;
+	public void setStd(Student std) {
+		this.std = std;
 	}
 
 	protected void show() {
@@ -341,24 +325,24 @@ public class StatusMenu {
 		
 		try {
 			//Se realiza una consulta por username para obtener los datos del usuario.
-			Student std = HibernateConfig.getCurrentSession().get(Student.class, this.user);
+			Student stdLocal = HibernateConfig.getCurrentSession().get(Student.class, this.std.getUsername());
 			
 			//Se realiza una consulta para obtener las materias aprobadas hasta el momento.
 			int subjectCounter = 0;
 			float avg, total = 0;
 			query = HibernateConfig.getCurrentSession().createQuery
 					("FROM Enrollment e WHERE e.student.username = :Students_username AND e.status = :status");
-			query.setParameter("Students_username", std.getUsername());
+			query.setParameter("Students_username", stdLocal.getUsername());
 			query.setParameter("status", "APROBADA");
-			std.setEnrollments(query.list());
+			stdLocal.setEnrollments(query.list());
 			
 			//Se calcula el total de materias aprobadas
-			for (Enrollment enrollment : std.getEnrollments()) {
+			for (Enrollment enrollment : stdLocal.getEnrollments()) {
 				subjectCounter++;
 			}
 			
 			//Se calcula el promedio de las materias aprobadas
-			for (Enrollment enrollment : std.getEnrollments()) {
+			for (Enrollment enrollment : stdLocal.getEnrollments()) {
 				total += enrollment.getAverage();
 			}
 			avg = total/subjectCounter;
@@ -367,9 +351,9 @@ public class StatusMenu {
 			int yearCounter = subjectCounter / 8;
 			
 			//Se actualizan los datos obtenidos en las etiquetas
-			lbl_infoName.setText(std.getName());
-			lbl_infoLastName.setText(std.getLastName());
-			lbl_infoCar.setText(String.valueOf(std.getCarrer().getName()));
+			lbl_infoName.setText(stdLocal.getName());
+			lbl_infoLastName.setText(stdLocal.getLastName());
+			lbl_infoCar.setText(String.valueOf(stdLocal.getCarrer().getName()));
 			lbl_infoSI.setText(subjectCounter + "/44");
 			lbl_infoYI.setText(yearCounter + "/6");
 			lbl_infoAvg.setText(avg + "/10.0");
@@ -377,11 +361,5 @@ public class StatusMenu {
 			JOptionPane.showMessageDialog(null, "Error al obtener los datos del estudiante");
 		}
 	}
-	public JFrame getFrmStatus() {
-		return frmStatus;
-	}
-
-	public void setFrmStatus(JFrame frmStatus) {
-		this.frmStatus = frmStatus;
-	}
+	
 }

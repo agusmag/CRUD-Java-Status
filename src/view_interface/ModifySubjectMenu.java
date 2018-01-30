@@ -9,7 +9,13 @@ import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
 import javax.swing.JTextField;
+
+import model.Student;
+import model.Subject;
+
 import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class ModifySubjectMenu {
 
@@ -21,6 +27,9 @@ public class ModifySubjectMenu {
 	
 	private JComboBox subjectsCombo;
 	private JComboBox statusCombo;
+	
+	private Student std;
+	private Subject sbj;
 
 	/**
 	 * Launch the application.
@@ -61,6 +70,11 @@ public class ModifySubjectMenu {
 		frmChangeOrDelete.getContentPane().add(lblSelectASubject);
 		
 		subjectsCombo = new JComboBox();
+		subjectsCombo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//Codigo para cambiarle el estado a una materia o para eliminarla del estado de cursada.
+			}
+		});
 		subjectsCombo.setBounds(204, 37, 198, 27);
 		frmChangeOrDelete.getContentPane().add(subjectsCombo);
 		
@@ -106,6 +120,12 @@ public class ModifySubjectMenu {
 		frmChangeOrDelete.getContentPane().add(btnDelete);
 		
 		JButton btnCancel = new JButton("Cancel");
+		btnCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SubjectsMenu sbMenu = new SubjectsMenu();
+				sbMenu.setStd(std);
+			}
+		});
 		btnCancel.setEnabled(false);
 		btnCancel.setFont(new Font("Consolas", Font.PLAIN, 18));
 		btnCancel.setBounds(336, 348, 132, 35);
@@ -163,6 +183,22 @@ public class ModifySubjectMenu {
 
 	public void setStatusCombo(JComboBox statusCombo) {
 		this.statusCombo = statusCombo;
+	}
+
+	public Student getStd() {
+		return std;
+	}
+
+	public void setStd(Student std) {
+		this.std = std;
+	}
+
+	public Subject getSbj() {
+		return sbj;
+	}
+
+	public void setSbj(Subject sbj) {
+		this.sbj = sbj;
 	}
 	
 }

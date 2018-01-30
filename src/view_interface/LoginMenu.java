@@ -36,6 +36,7 @@ public class LoginMenu {
 	private JButton btnConfirm;
 	
 	private Session session;
+	private Student std;
 
 	/**
 	 * Launch the application.
@@ -78,7 +79,7 @@ public class LoginMenu {
 		
 		btnConfirm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Student std = login();
+				std = login();
 				
 				if (std == null){
 					JOptionPane.showMessageDialog(null, "Nombre de Usuario o Contraseña incorrectos");
@@ -89,8 +90,7 @@ public class LoginMenu {
 				}else {
 					JOptionPane.showMessageDialog(null, "Bienvenido");
 					StatusMenu stMenu = new StatusMenu();
-					stMenu.setUser(textFieldLg.getText());
-					stMenu.setIdCarrer(std.getCarrer().getIdCarrer());
+					stMenu.setStd(std);
 					stMenu.getFrmStatus().setVisible(true);
 					frmLogin.dispose();
 				}
@@ -193,9 +193,9 @@ public class LoginMenu {
 	private Student login() {
 		//Se crea un estudiante para recibir la consulta de la Base de Datos
 		//Se crea un String username y una password para utilizarlo como filtro de busqueda.
-		Student std = new Student();
-		String user = textFieldLg.getText();
-		String pass = String.valueOf(passwordFieldLg.getPassword());
+		Student stdLocal = new Student();
+		stdLocal.setUsername(textFieldLg.getText());
+		stdLocal.setPassword(String.valueOf(passwordFieldLg.getPassword()));
 		
 		/*
 		 * CODIGO NO UTILIZADO, FORMA DIRECTA DE ACCEDER A LA BASE DE DATOS
@@ -224,14 +224,14 @@ public class LoginMenu {
 		
 		//Se obtiene la sesion brindada por Hibernate y se crea una Query para obtener el usuario correcto
 		Query query = HibernateConfig.getCurrentSession().createQuery("FROM Student s WHERE s.username = :username AND s.password = :password");
-		query.setParameter("username", user);
-		query.setParameter("password", pass);
+		query.setParameter("username", stdLocal.getUsername());
+		query.setParameter("password", stdLocal.getPassword());
 		//Se informa que se va transmitir informacion a la Base de Datos
 		try {
 			//Se guarda el estudiante en la session para luego enviarse mediante el commit hacia la Base de Datos
 			// Y luego se cierra la sesion.
-			std = (Student) query.uniqueResult();
-			return std;
+			stdLocal = (Student) query.uniqueResult();
+			return stdLocal;
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Error al cargar el usuario en la Base de Datos");
 			return null;

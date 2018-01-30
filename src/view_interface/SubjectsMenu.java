@@ -10,6 +10,7 @@ import java.awt.Font;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 
+import org.hibernate.Hibernate;
 import org.hibernate.query.Query;
 
 import hibernate.HibernateConfig;
@@ -36,9 +37,7 @@ public class SubjectsMenu {
 	private JList listComplete;
 	private JList listNext;
 	
-	private String user;
-	private String pass;
-	private int idCarrer;
+	private Student std;
 
 	/**
 	 * Launch the application.
@@ -80,10 +79,10 @@ public class SubjectsMenu {
 		btnAddSubject.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frmSubjects.dispose();
-				ChangeSubjectMenu csMenu = new ChangeSubjectMenu();
-				csMenu.setUser(user);
-				csMenu.setIdCarrer(idCarrer);
-				csMenu.getFrmChangeSubject().setVisible(true);
+				AddSubjectMenu asMenu = new AddSubjectMenu();
+				asMenu.setStd(std);
+				asMenu.setSbj(new Subject());
+				asMenu.getFrmAddSubject().setVisible(true);
 			}
 		});
 		btnAddSubject.setBounds(35, 289, 186, 31);
@@ -94,8 +93,7 @@ public class SubjectsMenu {
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				StatusMenu stMenu = new StatusMenu();
-				stMenu.setUser(user);
-				stMenu.setPass(pass);
+				stMenu.setStd(std);
 				frmSubjects.dispose();
 				stMenu.getFrmStatus().setVisible(true);
 			}
@@ -124,12 +122,11 @@ public class SubjectsMenu {
 		DefaultListModel<String> listModel = new DefaultListModel<String>();
 		listProgress.setModel(listModel);
 		
-		
 		listNext = new JList();
 		listNext.setBounds(257, 61, 186, 204);
 		
 		listComplete = new JList();
-		listComplete.setBounds(473, 61, 186, 331);
+		listComplete.setBounds(473, 61, 186, 204);
 		DefaultListModel<String> listModelC = new DefaultListModel<String>();
 		listComplete.setModel(listModelC);
 		
@@ -153,46 +150,15 @@ public class SubjectsMenu {
 		btnModify.setVisible(false);
 		btnModify.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//Se cargan las materias que actualmente cursa el usuario en el comboBox para poder modificarse.
 				ModifySubjectMenu msMenu = new ModifySubjectMenu();
+				msMenu.setStd(std);
 				for (int i = 0; i < listModel.size(); i++) {
 					msMenu.getSubjectsCombo().addItem(listModel.getElementAt(i));
 				}
+				
 				msMenu.getFrame().setVisible(true);
 				frmSubjects.dispose();
-				/*
-				//Se realiza una consulta para obtener el estado y notas de la materia seleccionada
-				query = HibernateConfig.getCurrentSession().createQuery
-						("FROM Enrollment e WHERE e.student_username = :Students_username AND e.subject_code = :Subjects_code");
-				query.setParameter("Students_username", user);
-				query.setParameter("Subjects_code", sbj.getCode());
-				enrollment = (Enrollment) query.uniqueResult();
-				if (enrollment.getStatus() != null) {
-					System.out.println("ENTRE");
-					switch (enrollment.getStatus()) {
-						case"APROBADA":
-						case"REPROBADA":
-							lblMarkOne.setText(String.valueOf(enrollment.getMarkOne()));
-							lblMarkTwo.setText(String.valueOf(enrollment.getMarkTwo()));;
-							markOneCombo.setVisible(true);
-							markTwoCombo.setVisible(true);
-							break;
-						case"CURSANDO":
-							lblFirstMark.setVisible(true);
-							lblSecondMark.setVisible(true);
-							for (int i = 1; i < 11; i++) {
-								markOneCombo.addItem(i);
-								markTwoCombo.addItem(i);
-							}
-							markOneCombo.setVisible(true);
-							markTwoCombo.setVisible(true);
-							break;
-					}
-					btnConfirm.setText("Modify Subject");
-				} else {
-					statusCombo.setSelectedItem("NO CURSANDO");
-					btnConfirm.setText("Add Subject");
-				}
-				*/
 			}
 		});
 		btnModify.setFont(new Font("Consolas", Font.PLAIN, 18));
@@ -205,7 +171,6 @@ public class SubjectsMenu {
 		separator_1.setBounds(455, 0, 11, 405);
 		frmSubjects.getContentPane().add(separator_1);
 		
-		
 		JLabel lblComplete = new JLabel("Complete");
 		lblComplete.setHorizontalAlignment(SwingConstants.CENTER);
 		lblComplete.setFont(new Font("Consolas", Font.PLAIN, 18));
@@ -216,6 +181,8 @@ public class SubjectsMenu {
 		separator_2.setForeground(Color.BLACK);
 		separator_2.setBounds(12, 405, 670, 13);
 		frmSubjects.getContentPane().add(separator_2);
+		
+		
 		btnShow.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			getInformation(listModel, listModelC);
@@ -225,24 +192,25 @@ public class SubjectsMenu {
 		});
 	}
 
-	protected void getInformation(DefaultListModel listModel, DefaultListModel listModelC) {
+	protected void getInformation(DefaultListModel<String> listModel, DefaultListModel<String> listModelC) {
 		//Se realiza una query para almacenar todas las materias que tiene el alumno actualmente.
+		
 		try {
-			Query query = HibernateConfig.getCurrentSession().createQuery("FROM Enrollment e WHERE e.student_username = :Students_username");
-			query.setParameter("Students_username", user);
-			List<Enrollment> enrollments = query.list();
-			//Una vez obtenida la materia, se consulta por el nombre de la materia con el codigo obtenido.
-			Subject subject = new Subject();
-			for (Enrollment enrollment : enrollments) {
-				query = HibernateConfig.getCurrentSession().createQuery("FROM Subject s WHERE s.code = :code");
-				query.setParameter("code", enrollment.getSubject().getCode());
-				subject = (Subject) query.uniqueResult();
-					if (enrollment.getStatus() == "CURSANDO") {
-					listModel.addElement(subject.toString());
-				} else if (enrollment.getStatus() == "APROBADA"){
-					listModelC.addElement(subject.toString());
+			Query query = HibernateConfig.getCurrentSession().createQuery
+					("FROM Enrollment e WHERE e.student.username = :Students_username");
+			query.setParameter("Students_username", std.getUsername());
+			List<Enrollment> enrollmentsLocal = query.list();
+			std.setEnrollments(enrollmentsLocal);
+
+			for (Enrollment enrollment : std.getEnrollments()) {
+				if (enrollment.getStatus().equals("CURSANDO")) {
+					listModel.addElement(enrollment.getSubject().getName());
+				} else if(enrollment.getStatus().equals("APROBADA")) {
+					listModelC.addElement(enrollment.getSubject().getName());
 				}
+
 			}
+			
 			} catch (Exception e) {
 				JOptionPane.showMessageDialog(null, "Error al obtener las materias del estudiante");
 			}	
@@ -256,28 +224,20 @@ public class SubjectsMenu {
 		this.frmSubjects = frmSubjets;
 	}
 
-	public String getUser() {
-		return user;
+	public JFrame getFrmSubjects() {
+		return frmSubjects;
 	}
 
-	public void setUser(String user) {
-		this.user = user;
+	public void setFrmSubjects(JFrame frmSubjects) {
+		this.frmSubjects = frmSubjects;
 	}
 
-	public String getPass() {
-		return pass;
+	public Student getStd() {
+		return std;
 	}
 
-	public void setPass(String pass) {
-		this.pass = pass;
-	}
-
-	public int getIdCarrer() {
-		return idCarrer;
-	}
-
-	public void setIdCarrer(int idCarrer) {
-		this.idCarrer = idCarrer;
+	public void setStd(Student std) {
+		this.std = std;
 	}
 	
 }

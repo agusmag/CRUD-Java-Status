@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -18,7 +19,7 @@ import javax.persistence.Table;
 public class Enrollment implements Serializable{
 	
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
 	private int id;
 	
@@ -47,7 +48,6 @@ public class Enrollment implements Serializable{
 
 	public Enrollment(int id, String status, float markOne, float markTwo, float average, Subject subject,
 			Student student) {
-		super();
 		this.id = id;
 		this.status = status;
 		this.markOne = markOne;

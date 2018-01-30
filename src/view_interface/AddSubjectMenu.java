@@ -25,6 +25,8 @@ import javax.swing.JTextField;
 import java.awt.Color;
 import javax.swing.JComboBox;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
@@ -32,17 +34,15 @@ import java.awt.event.WindowEvent;
 import javax.swing.JSeparator;
 import java.awt.Frame;
 
-public class ChangeSubjectMenu {
+public class AddSubjectMenu {
 
-	private JFrame frmChangeSubject;
+	private JFrame frmAddSubject;
 	private JTextField textName;
 	private JTextField textCode;
 	private JTextField textCorrelatives;
 	private JTextField textHsWeek;
-	private List<Subject> subjects;
-	private String user;
-	private int idCarrer;
-	private Enrollment enrollment;
+	private Student std;
+	private Enrollment enrollment = new Enrollment();
 	private Subject sbj;
 
 	/**
@@ -52,8 +52,8 @@ public class ChangeSubjectMenu {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ChangeSubjectMenu window = new ChangeSubjectMenu();
-					window.frmChangeSubject.setVisible(true);
+					AddSubjectMenu window = new AddSubjectMenu();
+					window.frmAddSubject.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -64,7 +64,7 @@ public class ChangeSubjectMenu {
 	/**
 	 * Create the application.
 	 */
-	public ChangeSubjectMenu() {
+	public AddSubjectMenu() {
 		initialize();
 	}
 
@@ -72,8 +72,6 @@ public class ChangeSubjectMenu {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		enrollment = new Enrollment();
-		
 		JLabel lblNameTag = new JLabel("Name");
 		lblNameTag.setBounds(20, 93, 107, 29);
 		lblNameTag.setFont(new Font("LLPixel", Font.PLAIN, 18));
@@ -135,19 +133,19 @@ public class ChangeSubjectMenu {
 		statusCombo.setBounds(139, 272, 228, 25);
 		
 		JComboBox subjectsCombo = new JComboBox();
+		subjectsCombo.addItem("Select a Subject");
 		subjectsCombo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//Se realiza una consulta para obtener las materias para que el estudiante las agregue a su lista
 				try {
 					if (subjectsCombo.getSelectedIndex() != 0) {
-						String sbjName = (String) subjectsCombo.getSelectedItem();
 						Query query = HibernateConfig.getCurrentSession().createQuery("FROM Subject s WHERE s.name = :nameSubject");
-						query.setParameter("nameSubject", sbjName);
-						sbj = (Subject) query.uniqueResult();
-						textName.setText(sbj.getName());
-						textCode.setText(String.valueOf(sbj.getCode()));
-						textCorrelatives.setText(sbj.getCorrelatives());
-						textHsWeek.setText(String.valueOf(sbj.getHoursWeek()));
+						query.setParameter("nameSubject", (String) subjectsCombo.getSelectedItem());
+						enrollment.setSubject((Subject)query.uniqueResult());
+						textName.setText(enrollment.getSubject().getName());
+						textCode.setText(String.valueOf(enrollment.getSubject().getCode()));
+						textCorrelatives.setText(enrollment.getSubject().getCorrelatives());
+						textHsWeek.setText(String.valueOf(enrollment.getSubject().getHoursWeek()));
 						statusCombo.addItem("NO CURSADA");
 						statusCombo.setSelectedItem("NO CURSADA");
 					}
@@ -161,122 +159,152 @@ public class ChangeSubjectMenu {
 		JButton btnConfirm = new JButton("Confirm");
 		btnConfirm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//Se realiza una consulta para saber si la materia ya esta ingresada.
-				Session session = HibernateConfig.getCurrentSession();
-				enrollment = new Enrollment();
-				enrollment.getStudent().setUsername(user);
-				enrollment.getSubject().setCode((Integer.parseInt(textCode.getText())));
-				enrollment.setStatus("CURSANDO");
-				
-				try {
-				session.beginTransaction();
-				session.save(enrollment);
-				session.getTransaction().commit();
-				session.close();
-				
-				Query query = HibernateConfig.getCurrentSession().createQuery
-						("FROM Enrollment e WHERE e.student_username = :Students_username AND e.subject_code = :Subjects_code");
-				query.setParameter("Students_username", user);
-				query.setParameter("Subjects_code", sbj.getCode());
-				enrollment = (Enrollment) query.uniqueResult();
-				System.out.println(enrollment.getSubject().getCode());
-				JOptionPane.showMessageDialog(null, "Materia Agregada a la cursada.");
-				}catch (Exception m) {
-					JOptionPane.showMessageDialog(null, "Error al incorporar la materia.");
-					
+				//Se verifica que cumpla con las correlativas
+				if (checkCorrelatives()) {
+					//Se completa la informacion del enrollment y se agrega a las listas de su respectivo usuario y su respectiva materia.
+					enrollment.setStudent(std);
+					enrollment.setStatus("CURSANDO");
+					sbj.getEnrollments().add(enrollment);
+					std.getEnrollments().add(enrollment);
+					try {
+						//Se crea una session y se guarda el enrollment correspondiente.
+						
+						Session session = HibernateConfig.getCurrentSession();
+						session.beginTransaction();
+						session.save(enrollment);
+						session.getTransaction().commit();
+						session.close();
+						
+						JOptionPane.showMessageDialog(null, "Materia Agregada a la cursada.");
+						subjectsCombo.setSelectedItem(0);
+						subjectsCombo.removeItem(enrollment.getSubject().getName());
+						
+					}catch (Exception m) {
+						JOptionPane.showMessageDialog(null, "Error al incorporar la materia.");
+					}
+				} else {
+					JOptionPane jp = new JOptionPane();
+					jp.showMessageDialog(null, "Primero debes aprobar las correlativas que tiene esta materia.");
 				}
 			}
 		});
 		btnConfirm.setBounds(91, 348, 132, 35);
 		btnConfirm.setFont(new Font("Consolas", Font.PLAIN, 18));
 		
-		frmChangeSubject = new JFrame();
-		frmChangeSubject.addWindowListener(new WindowAdapter() {
+		frmAddSubject = new JFrame();
+		frmAddSubject.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent arg0) {
 				getInformation(subjectsCombo);
 			}
 		});
-		frmChangeSubject.setTitle("Add a Subject");
-		frmChangeSubject.setBounds(100, 100, 500, 443);
-		frmChangeSubject.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frmChangeSubject.setLocationRelativeTo(null);
+		frmAddSubject.setTitle("Add a Subject");
+		frmAddSubject.setBounds(100, 100, 500, 443);
+		frmAddSubject.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmAddSubject.setLocationRelativeTo(null);
 		
 		JButton Cancel = new JButton("Cancel");
 		Cancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				SubjectsMenu sbMenu = new SubjectsMenu();
-				sbMenu.setUser(user);
+				sbMenu.setStd(std);
 				sbMenu.getFrmSubjets().setVisible(true);
-				frmChangeSubject.dispose();
+				frmAddSubject.dispose();
 			}
 		});
 		Cancel.setBounds(259, 349, 136, 33);
 		Cancel.setFont(new Font("Consolas", Font.PLAIN, 18));
 		
-		frmChangeSubject.getContentPane().add(lblSelectASubject);
-		frmChangeSubject.getContentPane().add(subjectsCombo);
-		frmChangeSubject.getContentPane().setLayout(null);
-		frmChangeSubject.getContentPane().add(lblCorrelativeTag);
-		frmChangeSubject.getContentPane().add(lblHsWeekTag);
-		frmChangeSubject.getContentPane().add(textHsWeek);
-		frmChangeSubject.getContentPane().add(textCorrelatives);
-		frmChangeSubject.getContentPane().add(lblCodeTag);
-		frmChangeSubject.getContentPane().add(lblNameTag);
-		frmChangeSubject.getContentPane().add(textName);
-		frmChangeSubject.getContentPane().add(textCode);
-		frmChangeSubject.getContentPane().add(lblcode);
-		frmChangeSubject.getContentPane().add(statusCombo);
-		frmChangeSubject.getContentPane().add(lblStatus);
-		frmChangeSubject.getContentPane().add(btnConfirm);
-		frmChangeSubject.getContentPane().add(Cancel);
+		frmAddSubject.getContentPane().add(lblSelectASubject);
+		frmAddSubject.getContentPane().add(subjectsCombo);
+		frmAddSubject.getContentPane().setLayout(null);
+		frmAddSubject.getContentPane().add(lblCorrelativeTag);
+		frmAddSubject.getContentPane().add(lblHsWeekTag);
+		frmAddSubject.getContentPane().add(textHsWeek);
+		frmAddSubject.getContentPane().add(textCorrelatives);
+		frmAddSubject.getContentPane().add(lblCodeTag);
+		frmAddSubject.getContentPane().add(lblNameTag);
+		frmAddSubject.getContentPane().add(textName);
+		frmAddSubject.getContentPane().add(textCode);
+		frmAddSubject.getContentPane().add(lblcode);
+		frmAddSubject.getContentPane().add(statusCombo);
+		frmAddSubject.getContentPane().add(lblStatus);
+		frmAddSubject.getContentPane().add(btnConfirm);
+		frmAddSubject.getContentPane().add(Cancel);
 		
 	}
 
-	private void getInformation(JComboBox subjectsCombo) {
-		//Se realiza una consulta para obtener las materias de la carrera.
-		try {
-			Query query = HibernateConfig.getCurrentSession().createQuery("FROM Subject s WHERE s.idCarrer = :Carrers_idCarrer");
-			query.setParameter("Carrers_idCarrer", idCarrer);
-			subjects = query.list();
-			subjectsCombo.addItem("Select a Subject");
-			for (Subject subject : subjects) {
-				subjectsCombo.addItem(subject.toString());
+	protected boolean checkCorrelatives() {
+		String [] strCorrelatives = enrollment.getSubject().getCorrelatives().split("/");
+		ArrayList<String> strStdComplete = new ArrayList<>();
+
+		//Se cargan todas las materias aprobadas del alumno.
+		for (Enrollment enrollmentLocal : std.getEnrollments()) {
+			if (enrollmentLocal.getStatus().equals("APROBADA"))
+				strStdComplete.add(String.valueOf(enrollmentLocal.getSubject().getCode()));
+		}
+
+		//Se comprueba que las correlativas, si existe alguna, se encuentren dentro de las aprobadas.
+		if (!strCorrelatives[0].equals("")) {
+			for (int i = 0; i < strCorrelatives.length; i++) {
+				if (strStdComplete.contains(strCorrelatives[i]))
+					return true;
 			}
+			return false;
+		}
+		return true;
+	}
+
+	private void getInformation(JComboBox subjectsCombo) {
+		List<Subject> sbjList;
+		String subjectName;
+		try {
+			//Se realiza una consulta para obtener las materias de la carrera.
+			Query query = HibernateConfig.getCurrentSession().createQuery("FROM Subject s WHERE s.carrer.idCarrer = :Carrers_idCarrer");
+			query.setParameter("Carrers_idCarrer", std.getCarrer().getIdCarrer());
+			sbjList = query.list();
+			
+			for (Subject subject : sbjList) {
+				if (!std.containSubject(subject.getName())) {
+					subjectsCombo.addItem(subject.getName());					
+				}
+			}
+			
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Error al obtener las materias de la carrera");
 		}
 	}
 
-	public List<Subject> getSbj() {
-		return subjects;
+	public JFrame getFrmAddSubject() {
+		return frmAddSubject;
 	}
 
-	public void setSbj(List<Subject> sbj) {
-		this.subjects = sbj;
+	public void setFrmAddSubject(JFrame frmAddSubject) {
+		this.frmAddSubject = frmAddSubject;
 	}
 
-	public String getUser() {
-		return user;
+	public Student getStd() {
+		return std;
 	}
 
-	public void setUser(String user) {
-		this.user = user;
+	public void setStd(Student std) {
+		this.std = std;
 	}
 
-	public int getIdCarrer() {
-		return idCarrer;
+	public Enrollment getEnrollment() {
+		return enrollment;
 	}
 
-	public void setIdCarrer(int idCarrer) {
-		this.idCarrer = idCarrer;
+	public void setEnrollment(Enrollment enrollment) {
+		this.enrollment = enrollment;
 	}
 
-	public JFrame getFrmChangeSubject() {
-		return frmChangeSubject;
+	public Subject getSbj() {
+		return sbj;
 	}
 
-	public void setFrmChangeSubject(JFrame frmAddToSubjects) {
-		this.frmChangeSubject = frmAddToSubjects;
+	public void setSbj(Subject sbj) {
+		this.sbj = sbj;
 	}
+	
 }
