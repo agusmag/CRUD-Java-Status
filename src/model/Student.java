@@ -107,6 +107,21 @@ public class Student implements Serializable{
 		}
 		return false;
 	}
+	
+	public Enrollment getEnrollment(String subjectName){
+		for (Enrollment enrollment : enrollments) {
+			if (enrollment.getSubject().getName().equals(subjectName))
+				return enrollment;
+		}
+		return null;
+	}
+	
+	public void setEnrollment(Enrollment enrollmentLocal) {
+		for (Enrollment enrollment : enrollments) {
+			if (enrollment.getSubject().getName().equals(enrollmentLocal.getSubject().getName()))
+				enrollment = enrollmentLocal;
+		}
+	}
 
 	@Override
 	public String toString() {
