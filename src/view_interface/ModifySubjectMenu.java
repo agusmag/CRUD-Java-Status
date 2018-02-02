@@ -29,6 +29,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JRadioButton;
 
 public class ModifySubjectMenu {
 
@@ -53,6 +54,7 @@ public class ModifySubjectMenu {
 	private Student stdBk;
 	private Subject sbj;
 	private Enrollment enrollment;
+	private Enrollment parcialEnrollment;
 
 	/**
 	 * Launch the application.
@@ -81,10 +83,32 @@ public class ModifySubjectMenu {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		parcialEnrollment = new Enrollment();
+		
+		JLabel lblRetrieve = new JLabel("Retrieve?");
+		lblRetrieve.setVisible(false);
+		JRadioButton rdbtnYes = new JRadioButton("Yes");
+		rdbtnYes.setVisible(false);
+		JRadioButton rdbtnNo = new JRadioButton("No");
+		rdbtnNo.setVisible(false);
+		
+		markCombo1 = new JComboBox();
+		markCombo2 = new JComboBox();
+		markCombo3 = new JComboBox();
+		markCombo1.addItem("Select a mark");
+		markCombo2.addItem("Select a mark");
+		markCombo3.addItem("Select a mark");
+
+		//Se cargan los markCombo
+		
+		for (int i = 1; i < 11; i++) {
+			markCombo1.addItem(i);
+			markCombo2.addItem(i);
+			markCombo3.addItem(i);
+		}
 		
 		subjectsCombo = new JComboBox();
 		subjectsCombo.addItem("Select a Subject");
-		
 		subjectsCombo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (subjectsCombo.getSelectedIndex() != 0) {
@@ -180,6 +204,15 @@ public class ModifySubjectMenu {
 						lblFinalMark.setVisible(true);
 						markCombo3.setVisible(true);
 						markCombo3.setSelectedIndex(Integer.parseInt(String.valueOf((int)enrollment.getAverage())));
+						markCombo1.setEnabled(false);
+						markCombo2.setEnabled(false);
+						lblRetrieve.setVisible(true);
+						rdbtnNo.setVisible(true);
+						rdbtnYes.setVisible(true);
+					} else if (!String.valueOf(statusCombo.getSelectedItem()).equals("APROBADA")) {
+						lblRetrieve.setVisible(true);
+						rdbtnNo.setVisible(true);
+						rdbtnYes.setVisible(true);
 					}
 					
 					lblMarkOne.setVisible(true);
@@ -204,10 +237,13 @@ public class ModifySubjectMenu {
 			public void actionPerformed(ActionEvent e) {
 				//Se almacenan los datos en el estudiante y se modifica la Base de Datos
 				//Se completa el enrollment con los datos actuales para subirse a la Base de Datos
+				enrollment.setMarkOne(parcialEnrollment.getMarkOne());
+				enrollment.setMarkTwo(parcialEnrollment.getMarkTwo());
+				enrollment.setAverage(parcialEnrollment.getAverage());
 				enrollment.setStatus(String.valueOf(statusCombo.getSelectedItem()));
+				enrollment.setSubject(sbj);
 				std.setEnrollment(enrollment);
 				enrollment.setStudent(std);
-				enrollment.setSubject(sbj);
 				
 				try {
 					Session sesion = HibernateConfig.getCurrentSession();
@@ -268,8 +304,6 @@ public class ModifySubjectMenu {
 		lblcodecodeetc.setBounds(371, 188, 97, 16);
 		frmChangeOrDelete.getContentPane().add(lblcodecodeetc);
 		
-		markCombo1 = new JComboBox();
-		markCombo1.addItem("Select a mark");
 		markCombo1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (markCombo1.getSelectedIndex() != 0) {
@@ -287,20 +321,18 @@ public class ModifySubjectMenu {
 								statusCombo.setSelectedItem("APROBADA");
 							}
 						}
-						enrollment.setAverage(avg);
+						parcialEnrollment.setAverage(avg);
 					}
-					
-					enrollment.setMarkOne(Integer.parseInt(String.valueOf(markCombo1.getSelectedItem())));
-				} else 
-					enrollment.setMarkOne(0);
+					parcialEnrollment.setMarkOne(Integer.parseInt(String.valueOf(markCombo1.getSelectedItem())));
+				} else if (enrollment.getMarkOne() == 0) {
+					parcialEnrollment.setMarkOne(0);
+				}
 			}
 		});
 		markCombo1.setVisible(false);
 		markCombo1.setBounds(199, 323, 109, 22);
 		frmChangeOrDelete.getContentPane().add(markCombo1);
 		
-		markCombo2 = new JComboBox();
-		markCombo2.addItem("Select a mark");
 		markCombo2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (markCombo2.getSelectedIndex() != 0) {
@@ -318,21 +350,18 @@ public class ModifySubjectMenu {
 								statusCombo.setSelectedItem("APROBADA");
 							}
 						}
-						
-						enrollment.setAverage(avg);
+						parcialEnrollment.setAverage(avg);
 					}
-
-					enrollment.setMarkTwo(Integer.parseInt(String.valueOf(markCombo2.getSelectedItem())));
-				} else
-					enrollment.setMarkTwo(0);
+					parcialEnrollment.setMarkTwo(Integer.parseInt(String.valueOf(markCombo2.getSelectedItem())));
+				} else if (enrollment.getMarkTwo() == 0) {
+					parcialEnrollment.setMarkTwo(0);
+				}
 			}
 		});
 		markCombo2.setVisible(false);
 		markCombo2.setBounds(200, 364, 108, 22);
 		frmChangeOrDelete.getContentPane().add(markCombo2);
 		
-		markCombo3 = new JComboBox();
-		markCombo3.addItem("Select a mark");
 		markCombo3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (markCombo3.getSelectedIndex() != 0) {
@@ -343,21 +372,44 @@ public class ModifySubjectMenu {
 							statusCombo.setSelectedItem("APROBADA");
 						}
 					}
-					enrollment.setAverage(Integer.parseInt(String.valueOf(markCombo3.getSelectedItem())));
+					parcialEnrollment.setAverage(Integer.parseInt(String.valueOf(markCombo3.getSelectedItem())));
 				} else
-					enrollment.setAverage(0);
+					parcialEnrollment.setAverage(0);
 			}
 		});
 		markCombo3.setVisible(false);
 		markCombo3.setBounds(199, 411, 109, 22);
 		frmChangeOrDelete.getContentPane().add(markCombo3);
-
+		rdbtnNo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				lblMarkOne.setEnabled(false);
+				markCombo1.setEnabled(false);
+				lblMarkTwo.setEnabled(false);
+				markCombo2.setEnabled(false);
+				markCombo3.setVisible(true);
+				lblFinalMark.setVisible(true);
+				rdbtnYes.setSelected(false);
+			}
+		});
+		rdbtnYes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				markCombo1.setEnabled(true);
+				markCombo2.setEnabled(true);
+				markCombo3.setVisible(false);
+				lblFinalMark.setVisible(false);
+				rdbtnNo.setSelected(false);
+			}
+		});
+		rdbtnYes.setBounds(341, 359, 127, 25);
+		frmChangeOrDelete.getContentPane().add(rdbtnYes);
 		
-		for (int i = 1; i < 11; i++) {
-			markCombo1.addItem(i);
-			markCombo2.addItem(i);
-			markCombo3.addItem(i);
-		}
+		
+		rdbtnNo.setBounds(341, 389, 127, 25);
+		frmChangeOrDelete.getContentPane().add(rdbtnNo);
+		lblRetrieve.setFont(new Font("LLPixel", Font.PLAIN, 18));
+		lblRetrieve.setHorizontalAlignment(SwingConstants.CENTER);
+		lblRetrieve.setBounds(341, 334, 127, 22);
+		frmChangeOrDelete.getContentPane().add(lblRetrieve);
 	}
 
 	protected void exit() {
@@ -406,5 +458,4 @@ public class ModifySubjectMenu {
 	public void setSbj(Subject sbj) {
 		this.sbj = sbj;
 	}
-	
 }

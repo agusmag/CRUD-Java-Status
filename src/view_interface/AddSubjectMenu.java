@@ -176,8 +176,8 @@ public class AddSubjectMenu {
 						session.close();
 						
 						JOptionPane.showMessageDialog(null, "Materia Agregada a la cursada.");
-						subjectsCombo.setSelectedItem(0);
 						subjectsCombo.removeItem(enrollment.getSubject().getName());
+						subjectsCombo.setSelectedItem(0);
 						
 					}catch (Exception m) {
 						JOptionPane.showMessageDialog(null, "Error al incorporar la materia.");

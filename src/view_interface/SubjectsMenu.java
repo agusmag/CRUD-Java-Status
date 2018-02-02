@@ -114,15 +114,15 @@ public class SubjectsMenu {
 		btnModify.setVisible(false);
 		btnModify.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//Se cargan las materias que actualmente cursa el usuario en el comboBox para poder modificarse.
-				ModifySubjectMenu msMenu = new ModifySubjectMenu();
-				msMenu.setStd(std);
-				for (int i = 0; i < listModel.size(); i++) {
-					msMenu.getSubjectsCombo().addItem(listModel.getElementAt(i));
+				if (!listProgress.isSelectionEmpty()) {
+					//Se carga la materia seleccionada por el usuario en la lista de materias.
+					ModifySubjectMenu msMenu = new ModifySubjectMenu();
+					msMenu.setStd(std);
+					msMenu.getSubjectsCombo().addItem(listProgress.getSelectedValue());
+					msMenu.getSubjectsCombo().setSelectedItem(listProgress.getSelectedValue());
+					msMenu.getFrame().setVisible(true);
+					frmSubjects.dispose();
 				}
-				msMenu.getSubjectsCombo().setSelectedIndex(0);
-				msMenu.getFrame().setVisible(true);
-				frmSubjects.dispose();
 			}
 		});
 		btnModify.setFont(new Font("Consolas", Font.PLAIN, 18));
@@ -133,21 +133,27 @@ public class SubjectsMenu {
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (!listProgress.isSelectionEmpty()) {
-					String sbjName = (String) listProgress.getSelectedValue();
-					Enrollment enrollmentLocal = std.getEnrollment(sbjName);
-					std.getEnrollments().remove(enrollmentLocal);
-					listModel.removeElement(sbjName);
 					
-					try {
-						Session session = HibernateConfig.getCurrentSession();
-						session.beginTransaction();
-						session.delete(enrollmentLocal);
-						session.getTransaction().commit();
-						session.close();
+					JOptionPane jpane = new JOptionPane();
+					int answer = jpane.showConfirmDialog(null, "Estas seguro que deseas eliminar la materia?.");
+					
+					if (answer == jpane.YES_OPTION) {
+						String sbjName = (String) listProgress.getSelectedValue();
+						Enrollment enrollmentLocal = std.getEnrollment(sbjName);
+						std.getEnrollments().remove(enrollmentLocal);
+						listModel.removeElement(sbjName);
 						
-						JOptionPane.showMessageDialog(null, "Materia eliminada correctamente.");
-					} catch (Exception m) {
-						JOptionPane.showMessageDialog(null, "Error al eliminar la materia seleccionada.");
+						try {
+							Session session = HibernateConfig.getCurrentSession();
+							session.beginTransaction();
+							session.delete(enrollmentLocal);
+							session.getTransaction().commit();
+							session.close();
+							
+							JOptionPane.showMessageDialog(null, "Materia eliminada correctamente.");
+						} catch (Exception m) {
+							JOptionPane.showMessageDialog(null, "Error al eliminar la materia seleccionada.");
+						}
 					}
 				}
 			}
@@ -173,21 +179,27 @@ public class SubjectsMenu {
 		btnDeleteComplete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (!listComplete.isSelectionEmpty()) {
-					String sbjName = (String) listComplete.getSelectedValue();
-					Enrollment enrollmentLocal = std.getEnrollment(sbjName);
-					std.getEnrollments().remove(enrollmentLocal);
-					listModelC.removeElement(sbjName);
 					
-					try {
-						Session session = HibernateConfig.getCurrentSession();
-						session.beginTransaction();
-						session.delete(enrollmentLocal);
-						session.getTransaction().commit();
-						session.close();
+					JOptionPane jpane = new JOptionPane();
+					int answer = jpane.showConfirmDialog(null, "Estas seguro que deseas eliminar la materia?.");
+					
+					if (answer == jpane.YES_OPTION) {
+						String sbjName = (String) listComplete.getSelectedValue();
+						Enrollment enrollmentLocal = std.getEnrollment(sbjName);
+						std.getEnrollments().remove(enrollmentLocal);
+						listModelC.removeElement(sbjName);
 						
-						JOptionPane.showMessageDialog(null, "Materia eliminada correctamente.");
-					} catch (Exception m) {
-						JOptionPane.showMessageDialog(null, "Error al eliminar la materia seleccionada.");
+						try {
+							Session session = HibernateConfig.getCurrentSession();
+							session.beginTransaction();
+							session.delete(enrollmentLocal);
+							session.getTransaction().commit();
+							session.close();
+							
+							JOptionPane.showMessageDialog(null, "Materia eliminada correctamente.");
+						} catch (Exception m) {
+							JOptionPane.showMessageDialog(null, "Error al eliminar la materia seleccionada.");
+						}
 					}
 				}
 			}
@@ -254,6 +266,12 @@ public class SubjectsMenu {
 		separator_2.setBounds(12, 445, 842, 13);
 		frmSubjects.getContentPane().add(separator_2);
 		
+		JSeparator separator_3 = new JSeparator();
+		separator_3.setOrientation(SwingConstants.VERTICAL);
+		separator_3.setForeground(Color.BLACK);
+		separator_3.setBounds(578, 0, 2, 444);
+		frmSubjects.getContentPane().add(separator_3);
+		
 	}
 
 	protected void getInformation(DefaultListModel<String> listModel, DefaultListModel<String> listModelC) {
@@ -303,5 +321,4 @@ public class SubjectsMenu {
 	public void setStd(Student std) {
 		this.std = std;
 	}
-	
 }
