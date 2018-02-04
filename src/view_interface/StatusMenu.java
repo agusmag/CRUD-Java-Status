@@ -9,6 +9,8 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.Font;
+import java.awt.Frame;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -26,6 +28,12 @@ import model.Student;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.awt.event.ActionEvent;
+import javax.swing.JPanel;
+import javax.swing.ImageIcon;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import javax.swing.JSeparator;
 
 public class StatusMenu {
 
@@ -48,6 +56,15 @@ public class StatusMenu {
 	private JLabel lbl_infoName;
 	
 	private Student std;
+	private JPanel panel;
+	private JLabel lblNewLabel;
+	private JLabel lblNewLabel_1;
+	
+	private int xx;
+	private int xy;
+	private JLabel lblNewLabel_2;
+	private JSeparator separator;
+	private JSeparator separator_1;
 	
 	/**
 	 * Launch the application.
@@ -77,22 +94,70 @@ public class StatusMenu {
 	 */
 	private void initialize() {
 		frmStatus = new JFrame();
+		frmStatus.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				int x = e.getXOnScreen();
+				int y = e.getYOnScreen();
+				
+				frmStatus.setLocation(x - xx, y - xy);
+			}
+		});
+		frmStatus.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				xx = e.getX();
+				xy = e.getY();
+			}
+		});
+		frmStatus.getContentPane().setBackground(new Color(0, 0, 0));
+		frmStatus.setUndecorated(true);
 		frmStatus.setBackground(Color.ORANGE);
 		frmStatus.setTitle("Status");
-		frmStatus.setBounds(100, 100, 523, 437);
+		frmStatus.setBounds(100, 100, 550, 519);
 		frmStatus.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmStatus.setLocationRelativeTo(null);
 		
 		btnCarrer = new JButton("Carrer");
-		btnCarrer.setBounds(12, 73, 157, 33);
+		btnCarrer.setFocusable(false);
+		btnCarrer.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnCarrer.setBackground(new Color(102, 102, 102));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnCarrer.setBackground(new Color(153, 153, 153));
+			}
+		});
+		btnCarrer.setToolTipText("Despliega el menu de las carreras");
+		btnCarrer.setBackground(new Color(153, 153, 153));
+		btnCarrer.setBorderPainted(false);
+		btnCarrer.setBounds(12, 80, 120, 100);
 		btnCarrer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
 		btnCarrer.setFont(new Font("Consolas", Font.PLAIN, 18));
 		
-		btnShowStatus = new JButton("Show Status");
-		btnShowStatus.setBounds(12, 186, 157, 91);
+		btnShowStatus = new JButton("Show");
+		btnShowStatus.setFocusable(false);
+		btnShowStatus.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnShowStatus.setBackground(new Color(102, 102, 102));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnShowStatus.setBackground(new Color(153, 153, 153));
+			}
+		});
+		btnShowStatus.setToolTipText("Despliega el estado del Alumno");
+		btnShowStatus.setVerticalTextPosition(SwingConstants.BOTTOM);
+		btnShowStatus.setIcon(new ImageIcon(StatusMenu.class.getResource("/background/if_User_Interface-39_2044249.png")));
+		btnShowStatus.setBackground(new Color(153, 153, 153));
+		btnShowStatus.setBorderPainted(false);
+		btnShowStatus.setBounds(12, 333, 120, 165);
 		btnShowStatus.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				show();
@@ -102,6 +167,20 @@ public class StatusMenu {
 		btnShowStatus.setFont(new Font("LLPixel", Font.PLAIN, 18));
 		
 		btnSubjets = new JButton("Subjects");
+		btnSubjets.setFocusable(false);
+		btnSubjets.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnSubjets.setBackground(new Color(102, 102, 102));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnSubjets.setBackground(new Color(153, 153, 153));
+			}
+		});
+		btnSubjets.setToolTipText("Abre el menu de materias");
+		btnSubjets.setBackground(new Color(153, 153, 153));
+		btnSubjets.setBorderPainted(false);
 		btnSubjets.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				SubjectsMenu sbMenu = new SubjectsMenu();
@@ -110,69 +189,92 @@ public class StatusMenu {
 				sbMenu.getFrmSubjets().setVisible(true);
 			}
 		});
-		btnSubjets.setBounds(12, 131, 157, 33);
+		btnSubjets.setBounds(12, 180, 120, 100);
 		btnSubjets.setFont(new Font("Consolas", Font.PLAIN, 18));
 		
 		lblCarrer = new JLabel("Carrer");
-		lblCarrer.setBounds(211, 139, 128, 26);
+		lblCarrer.setBounds(210, 198, 128, 26);
 		lblCarrer.setOpaque(true);
-		lblCarrer.setForeground(Color.BLACK);
+		lblCarrer.setForeground(new Color(51, 204, 51));
 		lblCarrer.setVisible(false);
 		lblCarrer.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCarrer.setHorizontalTextPosition(SwingConstants.CENTER);
-		lblCarrer.setFont(new Font("Consolas", Font.BOLD, 14));
-		lblCarrer.setBackground(Color.ORANGE);
+		lblCarrer.setFont(new Font("LLPixel", Font.BOLD, 20));
+		lblCarrer.setBackground(new Color(0, 0, 0));
 		
 		lblAvg = new JLabel("Average");
-		lblAvg.setBounds(211, 186, 128, 26);
+		lblAvg.setForeground(new Color(51, 204, 51));
+		lblAvg.setBounds(210, 259, 128, 26);
 		lblAvg.setOpaque(true);
 		lblAvg.setVisible(false);
-		lblAvg.setFont(new Font("Consolas", Font.BOLD, 14));
+		lblAvg.setFont(new Font("LLPixel", Font.BOLD, 20));
 		lblAvg.setHorizontalAlignment(SwingConstants.CENTER);
-		lblAvg.setBackground(Color.ORANGE);
+		lblAvg.setBackground(new Color(0, 0, 0));
 		
 		lblSubjectsIn = new JLabel("Subjects IN");
-		lblSubjectsIn.setBounds(211, 233, 128, 26);
+		lblSubjectsIn.setForeground(new Color(51, 204, 51));
+		lblSubjectsIn.setBounds(210, 320, 128, 26);
 		lblSubjectsIn.setOpaque(true);
 		lblSubjectsIn.setVisible(false);
-		lblSubjectsIn.setFont(new Font("Consolas", Font.BOLD, 14));
+		lblSubjectsIn.setFont(new Font("LLPixel", Font.BOLD, 20));
 		lblSubjectsIn.setHorizontalAlignment(SwingConstants.CENTER);
-		lblSubjectsIn.setBackground(Color.ORANGE);
+		lblSubjectsIn.setBackground(new Color(0, 0, 0));
 		
 		lblYearsIn = new JLabel("Years IN");
-		lblYearsIn.setBounds(211, 280, 128, 26);
+		lblYearsIn.setForeground(new Color(51, 204, 51));
+		lblYearsIn.setBounds(210, 381, 128, 26);
 		lblYearsIn.setOpaque(true);
 		lblYearsIn.setVisible(false);
-		lblYearsIn.setFont(new Font("Consolas", Font.BOLD, 14));
+		lblYearsIn.setFont(new Font("LLPixel", Font.BOLD, 20));
 		lblYearsIn.setHorizontalAlignment(SwingConstants.CENTER);
-		lblYearsIn.setBackground(Color.ORANGE);
+		lblYearsIn.setBackground(new Color(0, 0, 0));
 		
 		lbl_infoAvg = new JLabel("");
+		lbl_infoAvg.setForeground(new Color(255, 255, 255));
+		lbl_infoAvg.setOpaque(true);
 		lbl_infoAvg.setVisible(false);
 		lbl_infoAvg.setHorizontalAlignment(SwingConstants.CENTER);
-		lbl_infoAvg.setBounds(346, 186, 128, 26);
+		lbl_infoAvg.setBounds(380, 259, 128, 26);
 		lbl_infoAvg.setFont(new Font("Consolas", Font.PLAIN, 14));
 		lbl_infoAvg.setHorizontalTextPosition(SwingConstants.CENTER);
-		lbl_infoAvg.setBackground(new Color(102, 205, 170));
+		lbl_infoAvg.setBackground(new Color(51, 51, 51));
 		
 		lbl_infoSI = new JLabel("");
+		lbl_infoSI.setForeground(new Color(255, 255, 255));
+		lbl_infoSI.setOpaque(true);
 		lbl_infoSI.setVisible(false);
 		lbl_infoSI.setHorizontalAlignment(SwingConstants.CENTER);
-		lbl_infoSI.setBounds(346, 233, 128, 27);
+		lbl_infoSI.setBounds(380, 320, 128, 27);
 		lbl_infoSI.setFont(new Font("Consolas", Font.PLAIN, 14));
 		lbl_infoSI.setHorizontalTextPosition(SwingConstants.CENTER);
-		lbl_infoSI.setBackground(new Color(102, 205, 170));
+		lbl_infoSI.setBackground(new Color(51, 51, 51));
 		
 		lbl_infoYI = new JLabel("");
+		lbl_infoYI.setForeground(new Color(255, 255, 255));
+		lbl_infoYI.setOpaque(true);
 		lbl_infoYI.setVisible(false);
 		lbl_infoYI.setHorizontalAlignment(SwingConstants.CENTER);
-		lbl_infoYI.setBounds(346, 280, 128, 26);
+		lbl_infoYI.setBounds(380, 381, 128, 26);
 		lbl_infoYI.setFont(new Font("Consolas", Font.PLAIN, 14));
 		lbl_infoYI.setHorizontalTextPosition(SwingConstants.CENTER);
-		lbl_infoYI.setBackground(new Color(102, 205, 170));
+		lbl_infoYI.setBackground(new Color(51, 51, 51));
 		
-		btnBack = new JButton("Back");
-		btnBack.setBounds(270, 342, 154, 31);
+		btnBack = new JButton("");
+		btnBack.setFocusable(false);
+		btnBack.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnBack.setBackground(new Color(102, 102, 102));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnBack.setBackground(new Color(153, 153, 153));
+			}
+		});
+		btnBack.setIcon(new ImageIcon(StatusMenu.class.getResource("/background/if_User_Interface-09_2044237.png")));
+		btnBack.setBorderPainted(false);
+		btnBack.setBackground(new Color(153, 153, 153));
+		btnBack.setBounds(357, 467, 154, 31);
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frmStatus.dispose();
@@ -183,9 +285,12 @@ public class StatusMenu {
 		btnBack.setFont(new Font("Consolas", Font.PLAIN, 18));
 		
 		lbl_infoCar = new JLabel("");
+		lbl_infoCar.setForeground(new Color(255, 255, 255));
+		lbl_infoCar.setBackground(new Color(51, 51, 51));
+		lbl_infoCar.setOpaque(true);
 		lbl_infoCar.setVisible(false);
 		lbl_infoCar.setHorizontalAlignment(SwingConstants.CENTER);
-		lbl_infoCar.setBounds(346, 139, 128, 26);
+		lbl_infoCar.setBounds(380, 198, 128, 26);
 		lbl_infoCar.setFont(new Font("Consolas", Font.PLAIN, 14));
 		lbl_infoCar.setHorizontalTextPosition(SwingConstants.CENTER);
 		frmStatus.getContentPane().setLayout(null);
@@ -195,6 +300,13 @@ public class StatusMenu {
 		frmStatus.getContentPane().add(lbl_infoCar);
 		frmStatus.getContentPane().add(lblCarrer);
 		frmStatus.getContentPane().add(lblAvg);
+		
+		separator = new JSeparator();
+		separator.setOpaque(true);
+		separator.setBackground(new Color(51, 204, 51));
+		separator.setForeground(new Color(51, 204, 51));
+		separator.setBounds(144, 52, 4, 467);
+		frmStatus.getContentPane().add(separator);
 		frmStatus.getContentPane().add(lbl_infoAvg);
 		frmStatus.getContentPane().add(lbl_infoSI);
 		frmStatus.getContentPane().add(lblSubjectsIn);
@@ -203,40 +315,109 @@ public class StatusMenu {
 		frmStatus.getContentPane().add(btnBack);
 		
 		lblLastname = new JLabel("Lastname");
+		lblLastname.setForeground(new Color(51, 204, 51));
 		lblLastname.setVisible(false);
 		lblLastname.setHorizontalAlignment(SwingConstants.CENTER);
 		lblLastname.setOpaque(true);
-		lblLastname.setBackground(Color.ORANGE);
+		lblLastname.setBackground(new Color(0, 0, 0));
 		lblLastname.setHorizontalTextPosition(SwingConstants.CENTER);
-		lblLastname.setFont(new Font("Consolas", Font.BOLD, 14));
-		lblLastname.setBounds(211, 92, 128, 26);
+		lblLastname.setFont(new Font("LLPixel", Font.BOLD, 20));
+		lblLastname.setBounds(210, 137, 128, 26);
 		frmStatus.getContentPane().add(lblLastname);
 		
 		lblName = new JLabel("Name");
+		lblName.setForeground(new Color(51, 204, 51));
 		lblName.setVisible(false);
 		lblName.setHorizontalAlignment(SwingConstants.CENTER);
 		lblName.setOpaque(true);
-		lblName.setBackground(Color.ORANGE);
+		lblName.setBackground(new Color(0, 0, 0));
 		lblName.setHorizontalTextPosition(SwingConstants.CENTER);
-		lblName.setFont(new Font("Consolas", Font.BOLD, 14));
-		lblName.setBounds(211, 45, 128, 26);
+		lblName.setFont(new Font("LLPixel", Font.BOLD, 20));
+		lblName.setBounds(210, 80, 128, 26);
 		frmStatus.getContentPane().add(lblName);
 		
 		lbl_infoLastName = new JLabel("");
+		lbl_infoLastName.setForeground(new Color(255, 255, 255));
+		lbl_infoLastName.setBackground(new Color(51, 51, 51));
+		lbl_infoLastName.setOpaque(true);
 		lbl_infoLastName.setHorizontalTextPosition(SwingConstants.CENTER);
 		lbl_infoLastName.setHorizontalAlignment(SwingConstants.CENTER);
 		lbl_infoLastName.setFont(new Font("Consolas", Font.PLAIN, 14));
 		lbl_infoLastName.setVisible(false);
-		lbl_infoLastName.setBounds(346, 92, 128, 26);
+		lbl_infoLastName.setBounds(380, 137, 128, 26);
 		frmStatus.getContentPane().add(lbl_infoLastName);
 		
 		lbl_infoName = new JLabel("");
+		lbl_infoName.setForeground(new Color(255, 255, 255));
+		lbl_infoName.setBackground(new Color(51, 51, 51));
+		lbl_infoName.setOpaque(true);
 		lbl_infoName.setHorizontalTextPosition(SwingConstants.CENTER);
 		lbl_infoName.setHorizontalAlignment(SwingConstants.CENTER);
 		lbl_infoName.setFont(new Font("Consolas", Font.PLAIN, 14));
 		lbl_infoName.setVisible(false);
-		lbl_infoName.setBounds(346, 45, 128, 26);
+		lbl_infoName.setBounds(380, 80, 128, 26);
 		frmStatus.getContentPane().add(lbl_infoName);
+		
+		panel = new JPanel();
+		panel.setBackground(new Color(51, 51, 51));
+		panel.setBounds(0, 0, 605, 52);
+		frmStatus.getContentPane().add(panel);
+		panel.setLayout(null);
+		
+		lblNewLabel = new JLabel("");
+		lblNewLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				lblNewLabel.setBackground(new Color(102, 102, 102));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				lblNewLabel.setBackground(new Color(153, 153, 153));
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				System.exit(0);
+			}
+		});
+		lblNewLabel.setBackground(new Color(153, 153, 153));
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setIcon(new ImageIcon(StatusMenu.class.getResource("/background/if_User_Interface-02_2044283.png")));
+		lblNewLabel.setOpaque(true);
+		lblNewLabel.setBounds(510, 13, 32, 32);
+		panel.add(lblNewLabel);
+		
+		lblNewLabel_1 = new JLabel("");
+		lblNewLabel_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				lblNewLabel_1.setBackground(new Color(102, 102, 102));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				lblNewLabel_1.setBackground(new Color(153, 153, 153));
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				frmStatus.setState(Frame.ICONIFIED);
+			}
+		});
+		lblNewLabel_1.setOpaque(true);
+		lblNewLabel_1.setBackground(new Color(153, 153, 153));
+		lblNewLabel_1.setIcon(new ImageIcon(StatusMenu.class.getResource("/background/if_window-minimize_1954552.png")));
+		lblNewLabel_1.setBounds(462, 13, 32, 32);
+		panel.add(lblNewLabel_1);
+		
+		lblNewLabel_2 = new JLabel("Status");
+		lblNewLabel_2.setForeground(new Color(51, 204, 51));
+		lblNewLabel_2.setFont(new Font("LLPixel", Font.BOLD, 29));
+		lblNewLabel_2.setBounds(12, 13, 119, 32);
+		panel.add(lblNewLabel_2);
+		
+		separator_1 = new JSeparator();
+		separator_1.setOpaque(true);
+		separator_1.setBackground(new Color(51, 204, 51));
+		separator_1.setBounds(0, 305, 146, 4);
+		frmStatus.getContentPane().add(separator_1);
 	}
 	
 	public JLabel getLbl_infoAvg() {
@@ -288,9 +469,9 @@ public class StatusMenu {
 	}
 
 	protected void show() {
-		if (btnShowStatus.getText().equals("Show Status")) {
+		if (btnShowStatus.getText().equals("Show")) {
 			getInformation();
-			btnShowStatus.setText("Hide Status");
+			btnShowStatus.setText("Hide");
 			lblName.setVisible(true);
 			lblLastname.setVisible(true);
 			lblCarrer.setVisible(true);
@@ -304,7 +485,7 @@ public class StatusMenu {
 			lbl_infoSI.setVisible(true);
 			lbl_infoYI.setVisible(true);
 		} else {
-			btnShowStatus.setText("Show Status");
+			btnShowStatus.setText("Show");
 			lblName.setVisible(false);
 			lblLastname.setVisible(false);
 			lblCarrer.setVisible(false);
