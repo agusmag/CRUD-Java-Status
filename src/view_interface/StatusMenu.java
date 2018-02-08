@@ -1,32 +1,19 @@
 package view_interface;
 
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
-import javax.security.auth.Subject;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.Font;
 import java.awt.Frame;
-
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-
 import java.awt.Color;
 import javax.swing.SwingConstants;
-
-import org.hibernate.Session;
 import org.hibernate.query.Query;
-
 import hibernate.HibernateConfig;
-import model.Carrer;
 import model.Enrollment;
 import model.Student;
-
 import java.awt.event.ActionListener;
-import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 import javax.swing.ImageIcon;
@@ -136,6 +123,10 @@ public class StatusMenu {
 		btnCarrer.setBounds(12, 80, 120, 100);
 		btnCarrer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				CarrerMenu carrerM = new CarrerMenu();
+				carrerM.setStd(std);
+				carrerM.getCarrerMenu().setVisible(true);
+				frmStatus.dispose();
 			}
 		});
 		btnCarrer.setFont(new Font("Consolas", Font.PLAIN, 18));

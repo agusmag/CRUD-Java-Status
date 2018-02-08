@@ -8,10 +8,8 @@ import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
-
 import java.awt.Font;
 import java.awt.Frame;
-
 import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -19,10 +17,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
 import org.hibernate.query.Query;
-
 import hibernate.HibernateConfig;
 import model.Student;
-
 import java.awt.Dimension;
 import java.awt.Insets;
 import javax.swing.JPanel;

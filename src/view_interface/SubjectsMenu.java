@@ -20,6 +20,7 @@ import model.Enrollment;
 import model.Student;
 import model.Subject;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.JLabel;
 import java.awt.event.ComponentAdapter;
@@ -38,6 +39,8 @@ import javax.swing.ImageIcon;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 
 public class SubjectsMenu {
 
@@ -100,7 +103,7 @@ public class SubjectsMenu {
 		frmSubjects.addComponentListener(new ComponentAdapter() {
 		});
 		frmSubjects.setTitle("Subjects");
-		frmSubjects.setBounds(100, 100, 884, 564);
+		frmSubjects.setBounds(100, 100, 987, 564);
 		frmSubjects.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmSubjects.setLocationRelativeTo(null);
 		DefaultListModel<String> listModel = new DefaultListModel<String>();
@@ -128,7 +131,7 @@ public class SubjectsMenu {
 				stMenu.getFrmStatus().setVisible(true);
 			}
 		});
-		btnBack.setBounds(667, 518, 153, 33);
+		btnBack.setBounds(781, 520, 153, 33);
 		btnBack.setFont(new Font("Consolas", Font.PLAIN, 18));
 
 		frmSubjects.getContentPane().setLayout(null);
@@ -140,7 +143,7 @@ public class SubjectsMenu {
 		separator_1.setBounds(578, 0, 11, 444);
 
 		JSeparator separator = new JSeparator();
-		separator.setBounds(285, 52, 4, 451);
+		separator.setBounds(326, 52, 4, 451);
 		frmSubjects.getContentPane().add(separator);
 		separator.setOpaque(true);
 		separator.setBackground(new Color(51, 204, 51));
@@ -151,11 +154,11 @@ public class SubjectsMenu {
 		separator_2.setOpaque(true);
 		separator_2.setBackground(new Color(51, 204, 51));
 		separator_2.setForeground(Color.BLACK);
-		separator_2.setBounds(0, 503, 884, 4);
+		separator_2.setBounds(0, 503, 986, 4);
 		frmSubjects.getContentPane().add(separator_2);
 
 		JSeparator separator_3 = new JSeparator();
-		separator_3.setBounds(585, 52, 4, 451);
+		separator_3.setBounds(657, 52, 4, 451);
 		frmSubjects.getContentPane().add(separator_3);
 		separator_3.setBackground(new Color(51, 204, 51));
 		separator_3.setOpaque(true);
@@ -164,7 +167,7 @@ public class SubjectsMenu {
 
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(51, 51, 51));
-		panel.setBounds(0, 0, 884, 53);
+		panel.setBounds(0, 0, 988, 53);
 		frmSubjects.getContentPane().add(panel);
 		panel.setLayout(null);
 
@@ -188,7 +191,7 @@ public class SubjectsMenu {
 				.setIcon(new ImageIcon(SubjectsMenu.class.getResource("/background/if_User_Interface-02_2044283.png")));
 		lblNewLabel.setBackground(new Color(153, 153, 153));
 		lblNewLabel.setOpaque(true);
-		lblNewLabel.setBounds(840, 13, 32, 32);
+		lblNewLabel.setBounds(944, 13, 32, 32);
 		panel.add(lblNewLabel);
 
 		JLabel label = new JLabel("");
@@ -210,7 +213,7 @@ public class SubjectsMenu {
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setOpaque(true);
 		label.setBackground(new Color(153, 153, 153));
-		label.setBounds(796, 13, 32, 32);
+		label.setBounds(900, 13, 32, 32);
 		panel.add(label);
 
 		JLabel lblNewLabel_1 = new JLabel("Subject");
@@ -232,25 +235,46 @@ public class SubjectsMenu {
 		});
 		panel_1.setBackground(new Color(0, 0, 0));
 		panel_1.setForeground(new Color(51, 51, 51));
-		panel_1.setBounds(0, 52, 285, 451);
+		panel_1.setBounds(0, 52, 326, 451);
 		frmSubjects.getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 
 		JLabel lblInProgress = new JLabel("In Progress");
 		lblInProgress.setForeground(new Color(51, 204, 51));
-		lblInProgress.setBounds(0, 0, 288, 49);
+		lblInProgress.setBounds(0, 0, 326, 49);
 		panel_1.add(lblInProgress);
 		lblInProgress.setFont(new Font("LLPixel", Font.PLAIN, 20));
 		lblInProgress.setHorizontalAlignment(SwingConstants.CENTER);
-
-		listProgress = new JList();
-		listProgress.setBounds(12, 55, 260, 234);
-		panel_1.add(listProgress);
+		
+		
+		JButton btnModify = new JButton("Modify");
+		btnModify.setEnabled(false);
+		JButton btnDelete = new JButton("Delete");
+		
+		JScrollPane scrollPane_2 = new JScrollPane();
+		scrollPane_2.setBounds(12, 50, 302, 238);
+		panel_1.add(scrollPane_2);
+		
+				listProgress = new JList();
+				scrollPane_2.setViewportView(listProgress);
+				listProgress.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						if (listProgress.isSelectionEmpty()) {
+							btnModify.setEnabled(false);
+							btnDelete.setEnabled(false);
+						} else {
+							btnModify.setEnabled(true);
+							btnDelete.setEnabled(true);
+						}
+					}
+				});
 		listProgress.setVisibleRowCount(5);
 		listProgress.setFont(new Font("Consolas", Font.PLAIN, 14));
 		listProgress.setModel(listModel);
 
 		JButton btnAddSubject = new JButton("Add");
+		btnAddSubject.setToolTipText("Agregar materias a la cursada.");
 		btnAddSubject.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -263,7 +287,7 @@ public class SubjectsMenu {
 		});
 		btnAddSubject.setBorderPainted(false);
 		btnAddSubject.setBackground(new Color(153, 153, 153));
-		btnAddSubject.setBounds(81, 308, 128, 49);
+		btnAddSubject.setBounds(106, 308, 128, 49);
 		panel_1.add(btnAddSubject);
 		btnAddSubject.setVisible(false);
 		btnAddSubject.addActionListener(new ActionListener() {
@@ -278,7 +302,7 @@ public class SubjectsMenu {
 		btnAddSubject.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnAddSubject.setFont(new Font("Consolas", Font.PLAIN, 18));
 
-		JButton btnModify = new JButton("Modify");
+		btnModify.setToolTipText("Modificar una materia que se este cursando. Debe clickear en una materia.");
 		btnModify.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -291,7 +315,7 @@ public class SubjectsMenu {
 		});
 		btnModify.setBorderPainted(false);
 		btnModify.setBackground(new Color(153, 153, 153));
-		btnModify.setBounds(81, 355, 128, 49);
+		btnModify.setBounds(106, 355, 128, 49);
 		panel_1.add(btnModify);
 		btnModify.setVisible(false);
 		btnModify.addActionListener(new ActionListener() {
@@ -310,7 +334,8 @@ public class SubjectsMenu {
 		});
 		btnModify.setFont(new Font("Consolas", Font.PLAIN, 18));
 
-		JButton btnDelete = new JButton("Delete");
+		btnDelete.setEnabled(false);
+		btnDelete.setToolTipText("Eliminar una materia de la cursada actual.");
 		btnDelete.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -323,7 +348,7 @@ public class SubjectsMenu {
 		});
 		btnDelete.setBorderPainted(false);
 		btnDelete.setBackground(new Color(153, 153, 153));
-		btnDelete.setBounds(81, 402, 128, 49);
+		btnDelete.setBounds(106, 402, 128, 49);
 		panel_1.add(btnDelete);
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -344,7 +369,9 @@ public class SubjectsMenu {
 							session.delete(enrollmentLocal);
 							session.getTransaction().commit();
 							session.close();
-
+							
+							btnModify.setEnabled(false);
+							btnDelete.setEnabled(false);
 							JOptionPane.showMessageDialog(null, "Materia eliminada correctamente.");
 						} catch (Exception m) {
 							JOptionPane.showMessageDialog(null, "Error al eliminar la materia seleccionada.");
@@ -368,20 +395,23 @@ public class SubjectsMenu {
 			}
 		});
 		panel_2.setBackground(new Color(0, 0, 0));
-		panel_2.setBounds(290, 52, 295, 451);
+		panel_2.setBounds(331, 52, 326, 451);
 		frmSubjects.getContentPane().add(panel_2);
 		panel_2.setLayout(null);
 
 		JLabel lblNextStep = new JLabel("Next Step");
 		lblNextStep.setForeground(new Color(51, 204, 51));
-		lblNextStep.setBounds(2, 0, 288, 49);
+		lblNextStep.setBounds(2, 0, 324, 49);
 		panel_2.add(lblNextStep);
 		lblNextStep.setFont(new Font("LLPixel", Font.PLAIN, 20));
 		lblNextStep.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(12, 50, 302, 238);
+		panel_2.add(scrollPane_1);
 
 		listNext = new JList();
-		listNext.setBounds(16, 50, 260, 237);
-		panel_2.add(listNext);
+		scrollPane_1.setViewportView(listNext);
 		listNext.setFont(new Font("Consolas", Font.PLAIN, 14));
 
 		JPanel panel_3 = new JPanel();
@@ -396,24 +426,39 @@ public class SubjectsMenu {
 			}
 		});
 		panel_3.setBackground(new Color(0, 0, 0));
-		panel_3.setBounds(590, 53, 294, 451);
+		panel_3.setBounds(662, 52, 326, 451);
 		frmSubjects.getContentPane().add(panel_3);
 		panel_3.setLayout(null);
-
-		JLabel lblComplete = new JLabel("Complete");
-		lblComplete.setForeground(new Color(51, 204, 51));
-		lblComplete.setBounds(0, 0, 301, 49);
-		panel_3.add(lblComplete);
-		lblComplete.setHorizontalAlignment(SwingConstants.CENTER);
-		lblComplete.setFont(new Font("LLPixel", Font.PLAIN, 20));
-
+		
+		JButton btnDeleteComplete = new JButton("Delete");
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(12, 50, 302, 236);
+		panel_3.add(scrollPane);
+		
 		listComplete = new JList();
-		listComplete.setBounds(20, 50, 260, 238);
-		panel_3.add(listComplete);
+		scrollPane.setViewportView(listComplete);
+		listComplete.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (listComplete.isSelectionEmpty()) 
+					btnDeleteComplete.setEnabled(false);
+				else
+					btnDeleteComplete.setEnabled(true);
+			}
+		});
 		listComplete.setFont(new Font("Consolas", Font.PLAIN, 14));
 		listComplete.setModel(listModelC);
 
-		JButton btnDeleteComplete = new JButton("Delete");
+		JLabel lblComplete = new JLabel("Complete");
+		lblComplete.setForeground(new Color(51, 204, 51));
+		lblComplete.setBounds(-12, 0, 338, 49);
+		panel_3.add(lblComplete);
+		lblComplete.setHorizontalAlignment(SwingConstants.CENTER);
+		lblComplete.setFont(new Font("LLPixel", Font.PLAIN, 20));
+		
+		btnDeleteComplete.setEnabled(false);
+		btnDeleteComplete.setToolTipText("Eliminar una materia de la lista de completadas.");
 		btnDeleteComplete.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -426,7 +471,7 @@ public class SubjectsMenu {
 		});
 		btnDeleteComplete.setBorderPainted(false);
 		btnDeleteComplete.setBackground(new Color(153, 153, 153));
-		btnDeleteComplete.setBounds(95, 301, 128, 49);
+		btnDeleteComplete.setBounds(102, 308, 128, 49);
 		panel_3.add(btnDeleteComplete);
 		btnDeleteComplete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -460,6 +505,7 @@ public class SubjectsMenu {
 		btnDeleteComplete.setFont(new Font("Consolas", Font.PLAIN, 18));
 		
 		JButton btnShow = new JButton("Show");
+		btnShow.setToolTipText("Muestra las materias en sus categorias.");
 		btnShow.setVerticalTextPosition(SwingConstants.BOTTOM);
 		btnShow.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnShow.setIcon(new ImageIcon(SubjectsMenu.class.getResource("/background/if_User_Interface-39_2044249SMALL.png")));
@@ -486,7 +532,7 @@ public class SubjectsMenu {
 			}
 		});
 		btnShow.setFont(new Font("Consolas", Font.PLAIN, 18));
-		btnShow.setBounds(359, 509, 153, 56);
+		btnShow.setBounds(424, 508, 153, 56);
 		frmSubjects.getContentPane().add(btnShow);
 
 	}
@@ -503,7 +549,7 @@ public class SubjectsMenu {
 			std.setEnrollments(enrollmentsLocal);
 
 			for (Enrollment enrollment : std.getEnrollments()) {
-				if (enrollment.getStatus().equals("CURSANDO") || enrollment.getStatus().equals("FINAL")) {
+				if (enrollment.getStatus().equals("CURSANDO") || enrollment.getStatus().equals("FINAL") || enrollment.getStatus().equals("DESAPROBADA")) {
 					listModel.addElement(enrollment.getSubject().getName());
 				} else if (enrollment.getStatus().equals("APROBADA")) {
 					listModelC.addElement(enrollment.getSubject().getName());

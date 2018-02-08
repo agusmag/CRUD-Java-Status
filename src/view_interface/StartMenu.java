@@ -1,44 +1,20 @@
 package view_interface;
 
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
-import javax.imageio.ImageIO;
-import javax.jms.JMSException;
-import javax.jms.Session;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.Icon;
-import javax.swing.JButton;
-import javax.swing.LayoutStyle.ComponentPlacement;
-
 import hibernate.HibernateConfig;
-
-import javax.swing.JComboBox;
 import java.awt.Font;
 import java.awt.Frame;
-
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.Dialog.ModalExclusionType;
-import java.awt.Window.Type;
-import javax.swing.UIManager;
-
-import org.omg.CORBA_2_3.portable.InputStream;
-
 import javax.swing.JPanel;
 import java.awt.Component;
 import java.awt.Color;
 import javax.swing.SwingConstants;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.JSeparator;
 import java.awt.Rectangle;
 import java.awt.event.MouseMotionAdapter;
-import java.awt.image.BufferedImage;
 
 public class StartMenu {
 
@@ -130,7 +106,7 @@ public class StartMenu {
 		panel.add(lblExit);
 		lblExit.setIcon(new ImageIcon(StartMenu.class.getResource("/background/if_User_Interface-02_2044283.png")));
 		
-		JLabel lblLogin = new JLabel("");
+		JLabel lblLogin = 	new JLabel("");
 		lblLogin.setToolTipText("Logueate con tu cuenta de estudiante.");
 		lblLogin.addMouseListener(new MouseAdapter() {
 			@Override

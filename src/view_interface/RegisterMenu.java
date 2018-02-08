@@ -1,7 +1,6 @@
 package view_interface;
 
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JTextField;
@@ -9,13 +8,11 @@ import org.hibernate.Session;
 import hibernate.HibernateConfig;
 import model.Carrer;
 import model.Student;
-
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import javax.swing.JOptionPane;
 import java.awt.Font;
 import java.awt.Frame;
-
 import javax.swing.SwingConstants;
 import javax.swing.JComboBox;
 import java.awt.event.ActionListener;
